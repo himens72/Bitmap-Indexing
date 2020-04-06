@@ -50,25 +50,25 @@ public class ProgramController {
 		System.out.println("Records in T1 : " + recordCount1);
 		System.out.println("Block for T1 : " + blockCount1);
 		System.out.println("****************************Phase 1 for T2*********************************************");
-		List<String> T2 = phaseOne.sortTuple("T2", fileName2);
-		int blockCount2 = 0;
-		int recordCount2 = phaseOne.getRecordCount() - recordCount1;
-		if( recordCount2 % Constants.MAX_RECORD  == 0) {
-			blockCount2 = recordCount2 / Constants.MAX_RECORD;
-		} else {
-			blockCount2 = (recordCount2 / Constants.MAX_RECORD) +1 ;
-
-		}		
-		System.out.println("Records in T2 : " + recordCount2);
-		System.out.println("Block for T2 : " + blockCount2);
-		System.out.println("****************************Phase 1 Overview*********************************************");
-		System.out.println("Total number of records " + phaseOne.getRecordCount());
-		System.out.println(
-				"Total number of Block " + (phaseOne.getRecordCount() * Constants.TUPLE_SIZE) / Constants.BLOCK_SIZE);
-		int phaseOneDiskIO = 2 * (blockCount1 + blockCount2);
-		System.out.println("Sorted Disk IO " + phaseOneDiskIO);
-		System.gc();
-		System.out.println("****************************Phase 2*********************************************");
+		/*
+		 * List<String> T2 = phaseOne.sortTuple("T2", fileName2); int blockCount2 = 0;
+		 * int recordCount2 = phaseOne.getRecordCount() - recordCount1; if( recordCount2
+		 * % Constants.MAX_RECORD == 0) { blockCount2 = recordCount2 /
+		 * Constants.MAX_RECORD; } else { blockCount2 = (recordCount2 /
+		 * Constants.MAX_RECORD) +1 ;
+		 * 
+		 * }
+		 */		/*
+		 * System.out.println("Records in T2 : " + recordCount2);
+		 * System.out.println("Block for T2 : " + blockCount2); System.out.
+		 * println("****************************Phase 1 Overview*********************************************"
+		 * ); System.out.println("Total number of records " +
+		 * phaseOne.getRecordCount()); System.out.println( "Total number of Block " +
+		 * (phaseOne.getRecordCount() * Constants.TUPLE_SIZE) / Constants.BLOCK_SIZE);
+		 * int phaseOneDiskIO = 2 * (blockCount1 + blockCount2);
+		 * System.out.println("Sorted Disk IO " + phaseOneDiskIO);
+		 */		System.gc();
+//		System.out.println("****************************Phase 2*********************************************");
 		/*
 		 * PhaseTwo phaseTwo = new PhaseTwo(T1, T2); phaseTwo.performMergeSort();
 		 * System.out.println("Phase 2 Time : " + phaseTwo.getMergeTtime() + "ms" + " ("
