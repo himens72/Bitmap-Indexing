@@ -45,20 +45,89 @@ public class PhaseOne {
 			br = new BufferedReader(new FileReader(path));
 			boolean run = true;
 
+			long blockSize = 3;//((Constants.TOTAL_MEMORY * 7) / (100 * 1000)); // Using 10% memory for reading data
+								// from disk
+			firstFile = blockSize;
+			long begin = System.currentTimeMillis();
+			while (run) {
+				String record = null;
+				ArrayList<String> uniqueList = new ArrayList<>();
+				ArrayList<String> sortedList = new ArrayList<>();
+				long[][] bitmap = new long[(int) blockSize][(int) (blockSize + 1)];
+				long data_count = 0;
+				int subListRecord = 0;
+				while ((record = br.readLine()) != null) {
+					String empId = record.substring(0, 8);
+					if (uniqueList.contains(empId)) {
+						bitmap[uniqueList.indexOf(empId)][(int) (data_count + 1)] = 1;
+					} else {
+						bitmap[uniqueList.size()][0] = Long.parseLong(empId);
+						bitmap[uniqueList.size()][(int) (data_count + 1)] = 1;
+						uniqueList.add(empId);
+						sortedList.add(empId);
+					}
+					recordCount++;
+					subListRecord++;
+					++data_count;
+					if (data_count == blockSize) {
+						data_count = 0;
+						break;
+					}
+				}
+				lastFile = data_count;
+				sortedList = quickSort.executeQuickSort(sortedList);				
+				String outputFile = Constants.BLOCK_PATH + "/Block-" + currentBlock;
+				BufferedWriter write = new BufferedWriter(new FileWriter(outputFile));
+				for (int i = 0; i < sortedList.size(); i++) {
+					StringBuilder tempBuilder = new StringBuilder();
+					int index = uniqueList.indexOf(sortedList.get(i));
+					tempBuilder.append(bitmap[index][0] + ":");
+					for (int j = 1; j <= subListRecord; j++) {
+						tempBuilder.append(bitmap[index][j]);
+					}
+					write.write(tempBuilder.toString());
+					tempBuilder = new StringBuilder();
+					if (i < uniqueList.size() - 1)
+						write.newLine();
+				}
+				write.close();
+				subListName.add(outputFile);
+				if (record == null)
+					break;
+				currentBlock++;
+			}
+			sortingTime += (System.currentTimeMillis() - begin);
+			System.out.println("Time taken by Phase 1 for " + tuple + " : " + (System.currentTimeMillis() - begin)
+					+ "ms (" + (System.currentTimeMillis() - begin) / 1000.0 + "sec)");
+			System.out.println("First File " + firstFile);
+			System.out.println("Last File " + lastFile);
+			System.gc();
+		} catch (FileNotFoundException e) {
+			System.out.println("The File doesn't Exist : " + path);
+			System.exit(1);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		return subListName;
+	}
+	
+	public ArrayList<String> oldsortTuple(String tuple, String path) {
+		try {
+			br = new BufferedReader(new FileReader(path));
+			boolean run = true;
+
 			long blockSize = ((Constants.TOTAL_MEMORY * 3) / (100 * 10)); // Using 10% memory for reading data
 								// from disk
 			firstFile = blockSize;
 			long begin = System.currentTimeMillis();
 			while (run) {
 				String record = null;
-				//ArrayList<String> subList = new ArrayList<String>();
 				ArrayList<String> uniqueList = new ArrayList<>();
 				ArrayList<String> sortedList = new ArrayList<>();
 				HashMap<String, ArrayList<Integer>> bitmap = new HashMap<String, ArrayList<Integer>>(); 
 				long data_count = 0;
-				int subListRecord = 0;
 				while ((record = br.readLine()) != null) {
-					//subList.add(record);
 					String empId = record.substring(0, 8);
 					if (uniqueList.contains(empId)) {
 						ArrayList<Integer> temp = bitmap.get(empId);
@@ -72,7 +141,6 @@ public class PhaseOne {
 						sortedList.add(empId);
 					}
 					recordCount++;
-					subListRecord++;
 					++data_count;
 					if (data_count == blockSize) {
 						data_count = 0;
@@ -109,7 +177,6 @@ public class PhaseOne {
 			System.out.println("First File " + firstFile);
 			System.out.println("Last File " + lastFile);
 			System.gc();
-			mergeIndex();
 		} catch (FileNotFoundException e) {
 			System.out.println("The File doesn't Exist : " + path);
 			System.exit(1);
@@ -207,88 +274,6 @@ public class PhaseOne {
 		}
 	}
 	
-	public ArrayList<String> oldSortTuple(String tuple, String path) {
-		try {
-			br = new BufferedReader(new FileReader(path));
-			boolean run = true;
-
-			long blockSize = (Constants.TOTAL_MEMORY / (100 * 1000)); // Using 10% memory for reading data
-								// from disk
-			firstFile = blockSize;
-			long begin = System.currentTimeMillis();
-			while (run) {
-				String record = null;
-				//ArrayList<String> subList = new ArrayList<String>();
-				ArrayList<String> uniqueList = new ArrayList<>();
-				ArrayList<String> sortedList = new ArrayList<>();
-				long[][] bitmap = new long[(int) blockSize][(int) (blockSize + 1)];
-				long data_count = 0;
-				int subListRecord = 0;
-				while ((record = br.readLine()) != null) {
-					//subList.add(record);
-					String empId = record.substring(0, 8);
-					if (uniqueList.contains(empId)) {
-						bitmap[uniqueList.indexOf(empId)][(int) (data_count + 1)] = 1;
-					} else {
-						bitmap[uniqueList.size()][0] = Long.parseLong(empId);
-						bitmap[uniqueList.size()][(int) (data_count + 1)] = 1;
-						uniqueList.add(empId);
-						sortedList.add(empId);
-					}
-					recordCount++;
-					subListRecord++;
-					++data_count;
-					if (data_count == blockSize) {
-						data_count = 0;
-						break;
-					}
-				}
-				lastFile = data_count;
-				sortedList = quickSort.executeQuickSort(sortedList);				
-				String outputFile = Constants.BLOCK_PATH + "/Block-" + currentBlock;
-				BufferedWriter write = new BufferedWriter(new FileWriter(outputFile));
-				/*
-				 * for (int i = 0; i < uniqueList.size(); i++) { StringBuilder tempBuilder = new
-				 * StringBuilder(); tempBuilder.append(bitmap[i][0] + ":"); for (int j = 1; j <=
-				 * subList.size(); j++) { tempBuilder.append(bitmap[i][j]); }
-				 * write.write(tempBuilder.toString()); tempBuilder = new StringBuilder(); if (i
-				 * < uniqueList.size() - 1) write.newLine(); }
-				 */
-				
-				for (int i = 0; i < sortedList.size(); i++) {
-					StringBuilder tempBuilder = new StringBuilder();
-					int index = uniqueList.indexOf(sortedList.get(i));
-					tempBuilder.append(bitmap[index][0] + ":");
-					for (int j = 1; j <= subListRecord; j++) {
-						tempBuilder.append(bitmap[index][j]);
-					}
-					write.write(tempBuilder.toString());
-					tempBuilder = new StringBuilder();
-					if (i < uniqueList.size() - 1)
-						write.newLine();
-				}
-				write.close();
-				subListName.add(outputFile);
-				if (record == null)
-					break;
-				currentBlock++;
-			}
-			sortingTime += (System.currentTimeMillis() - begin);
-			System.out.println("Time taken by Phase 1 for " + tuple + " : " + (System.currentTimeMillis() - begin)
-					+ "ms (" + (System.currentTimeMillis() - begin) / 1000.0 + "sec)");
-			System.out.println("First File " + firstFile);
-			System.out.println("Last File " + lastFile);
-			System.gc();
-			mergeIndex();
-		} catch (FileNotFoundException e) {
-			System.out.println("The File doesn't Exist : " + path);
-			System.exit(1);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		return subListName;
-	}
 	public void oldv1_mergeIndex() {
 		try {
 			long begin = System.currentTimeMillis();

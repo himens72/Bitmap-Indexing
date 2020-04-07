@@ -97,16 +97,19 @@ public class PhaseTwo {
 				BufferedReader br2 = null;
 				if (i + 1 < blockList.size())
 					br2 = new BufferedReader(new FileReader(blockList.get(i + 1)));
-
+				
 				BufferedWriter bw = new BufferedWriter(new FileWriter(currentMergeFile));
 				String tuple1 = null;
 				String tuple2 = null;
+				long length1 = 0;
+				long length2 = 0;
 				String currentTuple = "";
 				if (br2 != null) {
 					while (true) {
 						if (tuple1 == null) {
 							tuple1 = br1.readLine();
 							tupleCount1++;
+							length1 = tuple1 == null || tuple1.trim().length() == 0 ? length1 : tuple1.substring(8 + 1).trim().length();
 							if(tupleCount1 == 40) {
 								++readCount;
 								tupleCount1 = 0;
@@ -114,6 +117,8 @@ public class PhaseTwo {
 						}
 						if (tuple2 == null) {
 							tuple2 = br2.readLine();
+							//System.out.println("Here " + tuple2);
+							length2 = tuple2 == null || tuple2.trim().length() == 0 ? length2 : tuple2.substring(8 + 1).trim().length();
 							tupleCount2++;
 							if(tupleCount2 == 40) {
 								++readCount;
@@ -124,179 +129,56 @@ public class PhaseTwo {
 							break;
 						}
 						if (tuple1 != null && tuple2 != null) {
-							if (currentTuple.trim().length() > 0) {
-								String id1 = tuple1.substring(0, 8);
-								String date1 = tuple1.substring(8, 18);
-								String id2 = tuple2.substring(0, 8);
-								String date2 = tuple2.substring(8, 18);
-								if (id1.equals(id2)) {
-									if (currentTuple.substring(0, 8).equals(id1)) {
-										if (date1.compareToIgnoreCase(date2) > 0) {
-											if (tuple1.substring(8, 18)
-													.compareToIgnoreCase(currentTuple.substring(8, 18)) > 0) {
-												currentTuple = tuple1;
-											}
-
-										} else if (date1.compareToIgnoreCase(date2) < 0) {
-											if (tuple2.substring(8, 18)
-													.compareToIgnoreCase(currentTuple.substring(8, 18)) > 0) {
-												currentTuple = tuple2;
-											}
-										} else {
-											currentTuple = tuple1;
-										}
-										tuple1 = null;
-										tuple2 = null;
-									} else {
-										bw.write(currentTuple);
-										bw.newLine();
-										write++;
-										if(write == 40) {
-											++WriteCount;
-											write = 0;
-										}
-										if (date1.compareToIgnoreCase(date2) > 0) {
-											currentTuple = tuple1;
-										} else if (date1.compareToIgnoreCase(date2) < 0) {
-											currentTuple = tuple2;
-										} else {
-											currentTuple = tuple1;
-										}
-										tuple1 = null;
-										tuple2 = null;
-
-									}
-								} else {
-									String currentId = currentTuple.substring(0, 8);
-									String currentDate = currentTuple.substring(8, 18);
-									if (currentId.equals(id1)) {
-										if (date1.compareToIgnoreCase(currentDate) > 0) {
-											currentTuple = tuple1;
-										}
-										tuple1 = null;
-									} else if (currentId.equals(id2)) {
-										if (date2.compareToIgnoreCase(currentDate) > 0) {
-											currentTuple = tuple2;
-										}
-										tuple2 = null;
-									} else {
-										bw.write(currentTuple);
-										bw.newLine();
-										write++;
-										if(write == 40) {
-											++WriteCount;
-											write = 0;
-										}
-										if (tuple1.substring(0, 18).compareToIgnoreCase(tuple2.substring(0, 18)) > 0) {
-											currentTuple = tuple2;
-											tuple2 = null;
-										} else if (tuple1.substring(0, 18)
-												.compareToIgnoreCase(tuple2.substring(0, 18)) < 0) {
-											currentTuple = tuple1;
-											tuple1 = null;
-										}
-									}
+							String id1 = tuple1.substring(0, 8);
+							String id2 = tuple2.substring(0, 8);
+							if(id1.equals(id2)) {
+								bw.write(id1+":"+tuple1.substring(8 + 1)+tuple2.substring(8 + 1));
+								bw.newLine();
+								tuple1 = null;
+								tuple2 = null;
+							} else  if(id1.compareToIgnoreCase(id2) > 0) {//id1 < id2
+								StringBuilder temp = new StringBuilder();
+								for(int k = 0; k < length1 ;k++) {
+									temp.append(0);
 								}
-							} else { // This Block is executed once Time When Merge take place 1st Time
-								String id1 = tuple1.substring(0, 8);
-								String date1 = tuple1.substring(8, 18);
-								String id2 = tuple2.substring(0, 8);
-								String date2 = tuple2.substring(8, 18);
-								if (id1.equals(id2)) {
-									if (date1.compareToIgnoreCase(date2) > 0) {
-										currentTuple = tuple1;
-									} else if (date1.compareToIgnoreCase(date2) < 0) {
-										currentTuple = tuple2;
-									} else {
-										currentTuple = tuple1;
-									}
-									tuple1 = null;
-									tuple2 = null;
-								} else {
-									if (tuple1.substring(0, 18).compareToIgnoreCase(tuple2.substring(0, 18)) > 0) {
-										currentTuple = tuple2;
-										tuple2 = null;
-									} else if (tuple1.substring(0, 18)
-											.compareToIgnoreCase(tuple2.substring(0, 18)) < 0) {
-										currentTuple = tuple1;
-										tuple1 = null;
-									}
+								bw.write(tuple2.substring(0, 8 + 1) + temp.toString() + tuple2.substring( 8 + 1));
+								bw.newLine();
+								tuple2 = null;
+							} else  if(id1.compareToIgnoreCase(id2) < 0) { //id1 > id2
+								StringBuilder temp = new StringBuilder();
+								for(int k = 0; k < length2 ;k++) {
+									temp.append(0);
 								}
-
+								bw.write(tuple1 + temp.toString());
+								bw.newLine();
+								tuple1 = null;
 							}
 						} else {
 							if (tuple1 != null) {
-								if (currentTuple.trim().length() > 0) {
-									if (currentTuple.substring(0, 8).equals(tuple1.substring(0, 8))) {
-										if (tuple1.substring(0, 18)
-												.compareToIgnoreCase(currentTuple.substring(0, 18)) > 0) {
-											currentTuple = tuple1;
-										}
-										tuple1 = null;
-									} else {
-										bw.write(currentTuple);
-										bw.newLine();
-										++write;
-										if(write == 40) {
-											++WriteCount;
-											write = 0;
-										}
-										currentTuple = tuple1;
-										tuple1 = null;
-									}
-								} else {
-									currentTuple = tuple1;
-									tuple1 = null;
+								StringBuilder temp = new StringBuilder();
+								for (int k = 0; k < length2; k++) {
+									temp.append(0);
 								}
-
+			//					System.out.println("Length 2 " + length2);
+								bw.write(tuple1 + temp.toString());
+								bw.newLine();
+								tuple1 = null;
 							} else {
-								if (currentTuple.trim().length() > 0) {
-									if (currentTuple.substring(0, 8).equals(tuple2.substring(0, 8))) {
-										if (tuple2.substring(0, 18)
-												.compareToIgnoreCase(currentTuple.substring(0, 18)) > 0) {
-											currentTuple = tuple2;
-										}
-										tuple2 = null;
-									} else {
-										bw.write(currentTuple);
-										bw.newLine();
-										++write;
-										if(write == 40) {
-											++WriteCount;
-											write = 0;
-										}
-										currentTuple = tuple2;
-										tuple2 = null;
-									}
-								} else {
-									currentTuple = tuple2;
-									tuple2 = null;
+								StringBuilder temp = new StringBuilder();
+								for(int k = 0; k < length1 ;k++) {
+									temp.append(0);
 								}
-
+								bw.write(tuple2.substring(0, 8 + 1) + temp.toString() + tuple2.substring(8 + 1));
+								bw.newLine();
+								tuple2 = null;
 							}
 						}
 
 					}
 				} else {
 					while ((tuple1 = br1.readLine()) != null) {
-						if (currentTuple.trim().length() > 0) {
-							if (currentTuple.substring(0, 8).equals(tuple1.substring(0, 8))) {
-								if (tuple1.substring(0, 18).compareToIgnoreCase(currentTuple.substring(0, 18)) > 0) {
-									currentTuple = tuple1;
-								}
-							} else {
-								bw.write(currentTuple);
-								bw.newLine();
-								++write;
-								if(write == 40) {
-									++WriteCount;
-									write = 0;
-								}
-								currentTuple = tuple1;
-							}
-						} else {
-							currentTuple = tuple1;
-						}
+						bw.write(tuple1);
+						bw.newLine();
 					}
 				}
 				bw.write(currentTuple);

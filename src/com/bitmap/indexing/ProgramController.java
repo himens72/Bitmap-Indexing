@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProgramController {
@@ -39,6 +40,8 @@ public class ProgramController {
 		PhaseOne phaseOne = new PhaseOne();
 		System.out.println("****************************Phase 1 for T1*********************************************");
 		List<String> T1 = phaseOne.sortTuple("T1", fileName1);
+		PhaseTwo two = new PhaseTwo(T1, new ArrayList<String>());
+		two.performMergeSort();
 		int blockCount1 = 0;
 		int recordCount1 = phaseOne.getRecordCount();
 		if( recordCount1 % Constants.MAX_RECORD  == 0) {
