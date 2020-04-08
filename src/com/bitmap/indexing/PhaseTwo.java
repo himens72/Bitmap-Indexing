@@ -26,6 +26,7 @@ import java.util.List;
 public class PhaseTwo {
 	long mergeTtime = 0;
 	int readCount = 0;
+
 	public int getReadCount() {
 		return readCount;
 	}
@@ -41,7 +42,9 @@ public class PhaseTwo {
 	public void setWriteCount(int writeCount) {
 		WriteCount = writeCount;
 	}
+
 	int WriteCount = 0;
+
 	public long getMergeTtime() {
 		return mergeTtime;
 	}
@@ -49,7 +52,9 @@ public class PhaseTwo {
 	public void setMergeTtime(long mergeTtime) {
 		this.mergeTtime = mergeTtime;
 	}
+
 	int tupleCount1 = 1;
+
 	public int getTupleCount1() {
 		return tupleCount1;
 	}
@@ -65,13 +70,15 @@ public class PhaseTwo {
 	public void setTupleCount2(int tupleCount2) {
 		this.tupleCount2 = tupleCount2;
 	}
+
 	int tupleCount2 = 1;
-	
+
 	static int itertion = 0;
 	static String currentMergeFile = "";
 	static List<String> listOfFiles;
 	static String outputPath = "";
 	int write = 0;
+
 	public int getWrite() {
 		return write;
 	}
@@ -86,18 +93,18 @@ public class PhaseTwo {
 		listOfFiles.addAll(T2);
 	}
 
-	public void mergeSort(List<String> blockList) {
+	public void mergeSort(List<String> blockList, String directory, int startIndex, int endIndex) {
 		long itertionStart = System.currentTimeMillis();
 		ArrayList<String> mergedFiles = new ArrayList<>();
 		System.lineSeparator();
 		for (int i = 0; i < blockList.size(); i = i + 2) {
-			currentMergeFile = Constants.BLOCK_PATH + itertion + "-Block-" + i + "_" + (i + 1);
+			currentMergeFile = directory + itertion + "-Block-" + i + "_" + (i + 1);
 			try {
 				BufferedReader br1 = new BufferedReader(new FileReader(blockList.get(i)));
 				BufferedReader br2 = null;
 				if (i + 1 < blockList.size())
 					br2 = new BufferedReader(new FileReader(blockList.get(i + 1)));
-				
+
 				BufferedWriter bw = new BufferedWriter(new FileWriter(currentMergeFile));
 				String tuple1 = null;
 				String tuple2 = null;
@@ -109,18 +116,20 @@ public class PhaseTwo {
 						if (tuple1 == null) {
 							tuple1 = br1.readLine();
 							tupleCount1++;
-							length1 = tuple1 == null || tuple1.trim().length() == 0 ? length1 : tuple1.substring(8 + 1).trim().length();
-							if(tupleCount1 == 40) {
+							length1 = tuple1 == null || tuple1.trim().length() == 0 ? length1
+									: tuple1.substring(endIndex + 1).trim().length();
+							if (tupleCount1 == 40) {
 								++readCount;
 								tupleCount1 = 0;
 							}
 						}
 						if (tuple2 == null) {
 							tuple2 = br2.readLine();
-							//System.out.println("Here " + tuple2);
-							length2 = tuple2 == null || tuple2.trim().length() == 0 ? length2 : tuple2.substring(8 + 1).trim().length();
+							// System.out.println("Here " + tuple2);
+							length2 = tuple2 == null || tuple2.trim().length() == 0 ? length2
+									: tuple2.substring(endIndex + 1).trim().length();
 							tupleCount2++;
-							if(tupleCount2 == 40) {
+							if (tupleCount2 == 40) {
 								++readCount;
 								tupleCount2 = 0;
 							}
@@ -129,24 +138,25 @@ public class PhaseTwo {
 							break;
 						}
 						if (tuple1 != null && tuple2 != null) {
-							String id1 = tuple1.substring(0, 8);
-							String id2 = tuple2.substring(0, 8);
-							if(id1.equals(id2)) {
-								bw.write(id1+":"+tuple1.substring(8 + 1)+tuple2.substring(8 + 1));
+							String id1 = tuple1.substring(0, endIndex);
+							String id2 = tuple2.substring(0, endIndex);
+							if (id1.equals(id2)) {
+								bw.write(id1 + ":" + tuple1.substring(endIndex + 1) + tuple2.substring(endIndex + 1));
 								bw.newLine();
 								tuple1 = null;
 								tuple2 = null;
-							} else  if(id1.compareToIgnoreCase(id2) > 0) {//id1 < id2
+							} else if (id1.compareToIgnoreCase(id2) > 0) {// id1 < id2
 								StringBuilder temp = new StringBuilder();
-								for(int k = 0; k < length1 ;k++) {
+								for (int k = 0; k < length1; k++) {
 									temp.append(0);
 								}
-								bw.write(tuple2.substring(0, 8 + 1) + temp.toString() + tuple2.substring( 8 + 1));
+								bw.write(tuple2.substring(0, endIndex + 1) + temp.toString()
+										+ tuple2.substring(endIndex + 1));
 								bw.newLine();
 								tuple2 = null;
-							} else  if(id1.compareToIgnoreCase(id2) < 0) { //id1 > id2
+							} else if (id1.compareToIgnoreCase(id2) < 0) { // id1 > id2
 								StringBuilder temp = new StringBuilder();
-								for(int k = 0; k < length2 ;k++) {
+								for (int k = 0; k < length2; k++) {
 									temp.append(0);
 								}
 								bw.write(tuple1 + temp.toString());
@@ -159,16 +169,17 @@ public class PhaseTwo {
 								for (int k = 0; k < length2; k++) {
 									temp.append(0);
 								}
-			//					System.out.println("Length 2 " + length2);
+								// System.out.println("Length 2 " + length2);
 								bw.write(tuple1 + temp.toString());
 								bw.newLine();
 								tuple1 = null;
 							} else {
 								StringBuilder temp = new StringBuilder();
-								for(int k = 0; k < length1 ;k++) {
+								for (int k = 0; k < length1; k++) {
 									temp.append(0);
 								}
-								bw.write(tuple2.substring(0, 8 + 1) + temp.toString() + tuple2.substring(8 + 1));
+								bw.write(tuple2.substring(0, endIndex + 1) + temp.toString()
+										+ tuple2.substring(endIndex + 1));
 								bw.newLine();
 								tuple2 = null;
 							}
@@ -189,14 +200,13 @@ public class PhaseTwo {
 				e.printStackTrace();
 			}
 		}
-		mergeTtime  += (System.currentTimeMillis() - itertionStart);
-		System.out.println(
-				"Phase 2 merging time iteration  " + itertion + " : " + (System.currentTimeMillis() - itertionStart)
+		mergeTtime += (System.currentTimeMillis() - itertionStart);
+		System.out.println("Round " + itertion + " Merging Time : " + (System.currentTimeMillis() - itertionStart)
 				+ "ms" + "(" + "~approx " + (System.currentTimeMillis() - itertionStart) / 1000.0 + "sec)");
-		
+
 		if (mergedFiles.size() > 1) {
 			itertion++;
-			mergeSort(mergedFiles);
+			mergeSort(mergedFiles, directory, startIndex, endIndex);
 		} else {
 			setOutputPath(currentMergeFile);
 		}
@@ -210,8 +220,8 @@ public class PhaseTwo {
 		PhaseTwo.outputPath = outputPath;
 	}
 
-	public void performMergeSort() {
-		mergeSort(listOfFiles);
+	public void performMergeSort(String directory, int startIndex, int endIndex) {
+		mergeSort(listOfFiles, directory, startIndex, endIndex);
 	}
 
 }

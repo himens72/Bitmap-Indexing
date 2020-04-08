@@ -1,4 +1,5 @@
 package com.bitmap.indexing;
+
 /*
 1.	https://www.geeksforgeeks.org/java-program-for-quicksort/
 2.	https://examples.javacodegeeks.com/core-java/nio/bytebuffer/write-append-to-file-with-byte-buffer/
@@ -14,7 +15,7 @@ package com.bitmap.indexing;
 12.	https://www.tutorialspoint.com/java/io/file_isfile.htm
 13.	http://www.mathcs.emory.edu/~cheung/Courses/554/Syllabus/4-query-exec/2-pass=TPMMS.html
 14.	http://www.mathcs.emory.edu/~cheung/Courses/554/Syllabus/4-query-exec/TPMMS=join2.html
-*/
+ */
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -30,84 +31,59 @@ public class ProgramController {
 	public static void main(String[] args) throws InterruptedException {
 		System.out
 		.println("****************************Cleaning Directory*********************************************");
-		buildBlockDirectory();
+		buildBlockDirectory(Constants.T1_EMP, "T1 Employee");
+		buildBlockDirectory(Constants.T2_EMP, "T2 Employee");
+		buildBlockDirectory(Constants.T1_DEPT, "T1 Department");
+		buildBlockDirectory(Constants.T2_DEPT, "T2 Department");
+		buildBlockDirectory(Constants.T1_GEN, "T1 Gender");
+		buildBlockDirectory(Constants.T1_GEN, "T2 Gender");
 		buildOutputDirectory();
 		System.out.println("Diretory Cleaned");
 		System.out.println("****************************TPMMS Console*********************************************");
 		System.gc();
 		System.out.println("Memory Size :  " + getMemorySize());
 		System.out.println("Tuple Size : " + Constants.TUPLE_SIZE);
+
+		System.out.println(
+				"****************************Bitmap Index for T1 Gender*********************************************");
+		PhaseOne phaseOne1 = new PhaseOne();
+		List<String> T11 = phaseOne1.sortTuple("T1", fileName1, Constants.T1_GEN, 43, 44);
+		PhaseTwo two1 = new PhaseTwo(T11, new ArrayList<String>());
+		two1.performMergeSort(Constants.T1_GEN, 0, 1);
+
+		System.out.println(
+				"****************************Bitmap Index for T1 Departmemt *********************************************");
+		PhaseOne phaseOne2 = new PhaseOne();
+		List<String> T12 = phaseOne2.sortTuple("T1", fileName1, Constants.T1_DEPT, 44, 47);
+		PhaseTwo two2 = new PhaseTwo(T12, new ArrayList<String>());
+		two2.performMergeSort(Constants.T1_DEPT, 0, 3);
+
+		System.out.println(
+				"****************************Bitmap Index for T1 Employee ID*********************************************");
 		PhaseOne phaseOne = new PhaseOne();
-		System.out.println("****************************Phase 1 for T1*********************************************");
-		List<String> T1 = phaseOne.sortTuple("T1", fileName1);
-		PhaseTwo two = new PhaseTwo(T1, new ArrayList<String>());
-		two.performMergeSort();
-		int blockCount1 = 0;
-		int recordCount1 = phaseOne.getRecordCount();
-		if( recordCount1 % Constants.MAX_RECORD  == 0) {
-			blockCount1 = recordCount1 / Constants.MAX_RECORD;
-		} else {
-			blockCount1 = (recordCount1 / Constants.MAX_RECORD) +1 ;
+		List<String> T13 = phaseOne.sortTuple("T1", fileName1, Constants.T1_EMP, 0, 8);
+		PhaseTwo two3 = new PhaseTwo(T13, new ArrayList<String>());
+		two3.performMergeSort(Constants.T1_EMP, 0, 8);
+		System.out.println(
+				"****************************Bitmap Index for T2 Gender*********************************************");
+		PhaseOne phaseOne21 = new PhaseOne();
+		List<String> T21 = phaseOne21.sortTuple("T2", fileName2, Constants.T2_GEN, 43, 44);
+		PhaseTwo two12 = new PhaseTwo(T21, new ArrayList<String>());
+		two12.performMergeSort(Constants.T2_GEN, 0, 1);
 
-		}
-		System.out.println("Records in T1 : " + recordCount1);
-		System.out.println("Block for T1 : " + blockCount1);
-		System.out.println("****************************Phase 1 for T2*********************************************");
-		/*
-		 * List<String> T2 = phaseOne.sortTuple("T2", fileName2); int blockCount2 = 0;
-		 * int recordCount2 = phaseOne.getRecordCount() - recordCount1; if( recordCount2
-		 * % Constants.MAX_RECORD == 0) { blockCount2 = recordCount2 /
-		 * Constants.MAX_RECORD; } else { blockCount2 = (recordCount2 /
-		 * Constants.MAX_RECORD) +1 ;
-		 * 
-		 * }
-		 */		/*
-		 * System.out.println("Records in T2 : " + recordCount2);
-		 * System.out.println("Block for T2 : " + blockCount2); System.out.
-		 * println("****************************Phase 1 Overview*********************************************"
-		 * ); System.out.println("Total number of records " +
-		 * phaseOne.getRecordCount()); System.out.println( "Total number of Block " +
-		 * (phaseOne.getRecordCount() * Constants.TUPLE_SIZE) / Constants.BLOCK_SIZE);
-		 * int phaseOneDiskIO = 2 * (blockCount1 + blockCount2);
-		 * System.out.println("Sorted Disk IO " + phaseOneDiskIO);
-		 */		System.gc();
-//		System.out.println("****************************Phase 2*********************************************");
-		/*
-		 * PhaseTwo phaseTwo = new PhaseTwo(T1, T2); phaseTwo.performMergeSort();
-		 * System.out.println("Phase 2 Time : " + phaseTwo.getMergeTtime() + "ms" + " ("
-		 * + phaseTwo.getMergeTtime() / 1000.0 + " sec)");
-		 * System.out.println("Merge Phase IO of I/O :" + (phaseTwo.getReadCount() +
-		 * phaseTwo.getWriteCount())); System.out.
-		 * println("****************************Output Overview*********************************************"
-		 * ); System.out.println( "Total time Phase 1 & Phase 2 : " +
-		 * (phaseTwo.getMergeTtime() + phaseOne.getSortingTime()) + "ms");
-		 * System.out.println("Total time Phase 1 & Phase 2 : " +
-		 * ((phaseTwo.getMergeTtime() + phaseOne.getSortingTime()) / 1000.0) + " sec");
-		 * System.out.println( "Total Number of I/O : " + (phaseOneDiskIO +
-		 * phaseTwo.getReadCount() + phaseTwo.getWriteCount()));
-		 * 
-		 * buildOutputDirectory(phaseTwo.getOutputPath());
-		 */	}
+		System.out.println(
+				"****************************Bitmap Index for T2 Departmemt *********************************************");
+		PhaseOne phaseOne22 = new PhaseOne();
+		List<String> T22 = phaseOne22.sortTuple("T2", fileName2, Constants.T2_DEPT, 44, 47);
+		PhaseTwo two22 = new PhaseTwo(T22, new ArrayList<String>());
+		two22.performMergeSort(Constants.T2_DEPT, 0, 3);
 
-	private static void buildOutputDirectory(String outputPath) {
-		try {
-			File outputDir = new File(Constants.OUTPUT_PATH);
-			if (!outputDir.exists()) {
-				System.out.println("Output Directory Created : " + outputDir.mkdir());
-			}
-			BufferedReader br = new BufferedReader(new FileReader(outputPath));
-			FileWriter writer = new FileWriter(Constants.OUTPUT_PATH + "output.txt", true);
-			String temp;
-
-			while ((temp = br.readLine()) != null) {
-				writer.write(temp + "\n");
-				writer.flush();
-			}
-			br.close();
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		System.out.println(
+				"****************************Bitmap Index for T2 Employee ID*********************************************");
+		PhaseOne phaseOne23 = new PhaseOne();
+		List<String> T23 = phaseOne23.sortTuple("T2", fileName2, Constants.T2_EMP, 0, 8);
+		PhaseTwo two33 = new PhaseTwo(T23, new ArrayList<String>());
+		two33.performMergeSort(Constants.T2_EMP, 0, 8);
 	}
 
 	public static void buildOutputDirectory() {
@@ -128,10 +104,10 @@ public class ProgramController {
 		}
 	}
 
-	public static void buildBlockDirectory() {
-		File deleteBlocks = new File(Constants.BLOCK_PATH);
+	public static void buildBlockDirectory(String folderPath, String folderType) {
+		File deleteBlocks = new File(folderPath);
 		if (!deleteBlocks.exists()) {
-			System.out.println("Block Directory Created : " + deleteBlocks.mkdir());
+			System.out.println(folderType + " Directory Created : " + deleteBlocks.mkdir());
 		} else if (deleteBlocks.isFile()) {
 		} else {
 			String fileList[] = deleteBlocks.list();
@@ -141,15 +117,15 @@ public class ProgramController {
 					currentBlockFiles.delete();
 				}
 			}
-			System.out.println("Block Directory Deleted :- " + deleteBlocks.delete());
-			System.out.println("Block Directory Created :- " + deleteBlocks.mkdir());
+			System.out.println(folderType + " Directory Deleted :- " + deleteBlocks.delete());
+			System.out.println(folderType + " Directory Created :- " + deleteBlocks.mkdir());
 		}
 	}
 
 	private static int getMemorySize() {
 		return (int) (Runtime.getRuntime().totalMemory() / (1024 * 1024));
 	}
-	
+
 	public static int getTotalBlocks(final int fileSize, final int blockSize) {
 		return (int) Math.ceil((double) fileSize / blockSize);
 	}

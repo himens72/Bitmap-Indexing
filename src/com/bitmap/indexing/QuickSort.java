@@ -1,4 +1,5 @@
 package com.bitmap.indexing;
+
 /*
 1.	https://www.geeksforgeeks.org/java-program-for-quicksort/
 2.	https://examples.javacodegeeks.com/core-java/nio/bytebuffer/write-append-to-file-with-byte-buffer/
@@ -14,15 +15,16 @@ package com.bitmap.indexing;
 12.	https://www.tutorialspoint.com/java/io/file_isfile.htm
 13.	http://www.mathcs.emory.edu/~cheung/Courses/554/Syllabus/4-query-exec/2-pass=TPMMS.html
 14.	http://www.mathcs.emory.edu/~cheung/Courses/554/Syllabus/4-query-exec/TPMMS=join2.html
-*/
+ */
 import java.util.ArrayList;
 
 public class QuickSort {
-	int partition(ArrayList<String> list, int low, int high) {
+	int partition(ArrayList<String> list, int low, int high, int startIndex, int endIndex) {
 		String pivot = list.get(high);
 		int i = (low - 1);
 		for (int j = low; j < high; j++) {
-			if (list.get(j).substring(0, 8).compareToIgnoreCase(pivot.substring(0, 8)) < 0) {
+			if (list.get(j).substring(0, endIndex - startIndex)
+					.compareToIgnoreCase(pivot.substring(0, endIndex - startIndex)) < 0) {
 				i++;
 				String temp = list.get(i);
 				list.set(i, list.get(j));
@@ -35,17 +37,17 @@ public class QuickSort {
 		return i + 1;
 	}
 
-	void sort(ArrayList<String> list, int low, int high) {
+	void sort(ArrayList<String> list, int low, int high, int startIndex, int endIndex) {
 		if (low < high) {
-			int pi = partition(list, low, high);
-			sort(list, low, pi - 1);
-			sort(list, pi + 1, high);
+			int pi = partition(list, low, high, startIndex, endIndex);
+			sort(list, low, pi - 1, startIndex, endIndex);
+			sort(list, pi + 1, high, startIndex, endIndex);
 		}
 	}
 
-	public ArrayList<String> executeQuickSort(ArrayList<String> list) {
+	public ArrayList<String> executeQuickSort(ArrayList<String> list, int startIndex, int endIndex) {
 		int n = list.size();
-		sort(list, 0, n - 1);
+		sort(list, 0, n - 1, startIndex, endIndex);
 		return list;
 	}
 }
