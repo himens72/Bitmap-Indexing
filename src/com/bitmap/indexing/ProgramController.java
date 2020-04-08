@@ -28,6 +28,7 @@ public class ProgramController {
 	static String fileName1 = Constants.INPUT_PATH + Constants.INPUT_FILE1;
 	static String fileName2 = Constants.INPUT_PATH + Constants.INPUT_FILE2;
 
+	
 	public static void main(String[] args) throws InterruptedException {
 		System.out
 		.println("****************************Cleaning Directory*********************************************");
