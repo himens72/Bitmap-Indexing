@@ -41,7 +41,7 @@ public class PhaseOne {
 			br = new BufferedReader(new FileReader(path));
 			boolean run = true;
 
-			long blockSize = ((Constants.TOTAL_MEMORY * 7) / (100 * 1000));
+			long blockSize = ((Constants.TOTAL_MEMORY * 5) / (100 * 1000));
 			firstFile = blockSize;
 			long begin = System.currentTimeMillis();
 			while (run) {
@@ -98,7 +98,7 @@ public class PhaseOne {
 			System.out.println("Last File " + lastFile);
 			System.gc();
 		} catch (FileNotFoundException e) {
-			System.out.println("The File doesn't Exist : " + path);
+			System.out.println("The File doesn't Exist : " + e);
 			System.exit(1);
 		} catch (IOException e) {
 			e.printStackTrace();

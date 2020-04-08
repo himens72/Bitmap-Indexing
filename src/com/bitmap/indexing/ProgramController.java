@@ -36,54 +36,56 @@ public class ProgramController {
 		buildBlockDirectory(Constants.T1_DEPT, "T1 Department");
 		buildBlockDirectory(Constants.T2_DEPT, "T2 Department");
 		buildBlockDirectory(Constants.T1_GEN, "T1 Gender");
-		buildBlockDirectory(Constants.T1_GEN, "T2 Gender");
+		buildBlockDirectory(Constants.T2_GEN, "T2 Gender");
 		buildOutputDirectory();
 		System.out.println("Diretory Cleaned");
 		System.out.println("****************************TPMMS Console*********************************************");
 		System.gc();
 		System.out.println("Memory Size :  " + getMemorySize());
 		System.out.println("Tuple Size : " + Constants.TUPLE_SIZE);
-
+		System.gc();
 		System.out.println(
 				"****************************Bitmap Index for T1 Gender*********************************************");
 		PhaseOne phaseOne1 = new PhaseOne();
 		List<String> T11 = phaseOne1.sortTuple("T1", fileName1, Constants.T1_GEN, 43, 44);
 		PhaseTwo two1 = new PhaseTwo(T11, new ArrayList<String>());
 		two1.performMergeSort(Constants.T1_GEN, 0, 1);
-
+		System.gc();
 		System.out.println(
 				"****************************Bitmap Index for T1 Departmemt *********************************************");
 		PhaseOne phaseOne2 = new PhaseOne();
 		List<String> T12 = phaseOne2.sortTuple("T1", fileName1, Constants.T1_DEPT, 44, 47);
 		PhaseTwo two2 = new PhaseTwo(T12, new ArrayList<String>());
 		two2.performMergeSort(Constants.T1_DEPT, 0, 3);
-
-		System.out.println(
-				"****************************Bitmap Index for T1 Employee ID*********************************************");
-		PhaseOne phaseOne = new PhaseOne();
-		List<String> T13 = phaseOne.sortTuple("T1", fileName1, Constants.T1_EMP, 0, 8);
-		PhaseTwo two3 = new PhaseTwo(T13, new ArrayList<String>());
-		two3.performMergeSort(Constants.T1_EMP, 0, 8);
+		System.gc();
 		System.out.println(
 				"****************************Bitmap Index for T2 Gender*********************************************");
 		PhaseOne phaseOne21 = new PhaseOne();
 		List<String> T21 = phaseOne21.sortTuple("T2", fileName2, Constants.T2_GEN, 43, 44);
 		PhaseTwo two12 = new PhaseTwo(T21, new ArrayList<String>());
 		two12.performMergeSort(Constants.T2_GEN, 0, 1);
-
+		System.gc();
 		System.out.println(
 				"****************************Bitmap Index for T2 Departmemt *********************************************");
 		PhaseOne phaseOne22 = new PhaseOne();
 		List<String> T22 = phaseOne22.sortTuple("T2", fileName2, Constants.T2_DEPT, 44, 47);
 		PhaseTwo two22 = new PhaseTwo(T22, new ArrayList<String>());
 		two22.performMergeSort(Constants.T2_DEPT, 0, 3);
-
+		System.gc();
+		System.out.println(
+				"****************************Bitmap Index for T1 Employee ID*********************************************");
+		PhaseOne phaseOne = new PhaseOne();
+		List<String> T13 = phaseOne.sortTuple("T1", fileName1, Constants.T1_EMP, 0, 8);
+		PhaseTwo two3 = new PhaseTwo(T13, new ArrayList<String>());
+		two3.performMergeSort(Constants.T1_EMP, 0, 8);
+		System.gc();	
 		System.out.println(
 				"****************************Bitmap Index for T2 Employee ID*********************************************");
 		PhaseOne phaseOne23 = new PhaseOne();
 		List<String> T23 = phaseOne23.sortTuple("T2", fileName2, Constants.T2_EMP, 0, 8);
 		PhaseTwo two33 = new PhaseTwo(T23, new ArrayList<String>());
 		two33.performMergeSort(Constants.T2_EMP, 0, 8);
+		System.gc();
 	}
 
 	public static void buildOutputDirectory() {
