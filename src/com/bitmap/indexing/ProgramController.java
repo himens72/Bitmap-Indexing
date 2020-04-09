@@ -28,7 +28,6 @@ public class ProgramController {
 	static String fileName1 = Constants.INPUT_PATH + Constants.INPUT_FILE1;
 	static String fileName2 = Constants.INPUT_PATH + Constants.INPUT_FILE2;
 
-	
 	public static void main(String[] args) throws InterruptedException {
 		System.out
 		.println("****************************Cleaning Directory*********************************************");
@@ -59,6 +58,7 @@ public class ProgramController {
 		PhaseTwo two2 = new PhaseTwo(T12, new ArrayList<String>());
 		two2.performMergeSort(Constants.T1_DEPT, 0, 3);
 		System.gc();
+
 		System.out.println(
 				"****************************Bitmap Index for T2 Gender*********************************************");
 		PhaseOne phaseOne21 = new PhaseOne();
@@ -79,7 +79,8 @@ public class ProgramController {
 		List<String> T13 = phaseOne.sortTuple("T1", fileName1, Constants.T1_EMP, 0, 8);
 		PhaseTwo two3 = new PhaseTwo(T13, new ArrayList<String>());
 		two3.performMergeSort(Constants.T1_EMP, 0, 8);
-		System.gc();	
+		System.gc();
+
 		System.out.println(
 				"****************************Bitmap Index for T2 Employee ID*********************************************");
 		PhaseOne phaseOne23 = new PhaseOne();
@@ -87,6 +88,7 @@ public class ProgramController {
 		PhaseTwo two33 = new PhaseTwo(T23, new ArrayList<String>());
 		two33.performMergeSort(Constants.T2_EMP, 0, 8);
 		System.gc();
+
 	}
 
 	public static void buildOutputDirectory() {
