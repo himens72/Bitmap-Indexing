@@ -52,7 +52,7 @@ public class ProgramController {
 		System.gc();
 		System.out.println(
 				"****************************Bitmap Index for T1 Gender*********************************************");
-		BuilldIndex phaseOne1 = new BuilldIndex();
+		BuildIndex phaseOne1 = new BuildIndex();
 		List<String> T11 = phaseOne1.sortTuple("T1", fileName1, Constants.T1_GEN, 43, 44);
 		MergeData two1 = new MergeData(T11, new ArrayList<String>());
 		two1.performMergeSort(Constants.T1_GEN, 0, 1);
@@ -60,7 +60,7 @@ public class ProgramController {
 		System.gc();
 		System.out.println(
 				"****************************Bitmap Index for T1 Departmemt *********************************************");
-		BuilldIndex phaseOne2 = new BuilldIndex();
+		BuildIndex phaseOne2 = new BuildIndex();
 		List<String> T12 = phaseOne2.sortTuple("T1", fileName1, Constants.T1_DEPT, 44, 47);
 		MergeData two2 = new MergeData(T12, new ArrayList<String>());
 		two2.performMergeSort(Constants.T1_DEPT, 0, 3);
@@ -68,7 +68,7 @@ public class ProgramController {
 		t1_department_file = two2.getOutputPath();
 		System.out.println(
 				"****************************Bitmap Index for T2 Gender*********************************************");
-		BuilldIndex phaseOne21 = new BuilldIndex();
+		BuildIndex phaseOne21 = new BuildIndex();
 		List<String> T21 = phaseOne21.sortTuple("T2", fileName2, Constants.T2_GEN, 43, 44);
 		MergeData two12 = new MergeData(T21, new ArrayList<String>());
 		two12.performMergeSort(Constants.T2_GEN, 0, 1);
@@ -76,7 +76,7 @@ public class ProgramController {
 		System.gc();
 		System.out.println(
 				"****************************Bitmap Index for T2 Departmemt *********************************************");
-		BuilldIndex phaseOne22 = new BuilldIndex();
+		BuildIndex phaseOne22 = new BuildIndex();
 		List<String> T22 = phaseOne22.sortTuple("T2", fileName2, Constants.T2_DEPT, 44, 47);
 		MergeData two22 = new MergeData(T22, new ArrayList<String>());
 		two22.performMergeSort(Constants.T2_DEPT, 0, 3);
@@ -85,7 +85,7 @@ public class ProgramController {
 		System.gc();
 		System.out.println(
 				"****************************Bitmap Index for T1 Employee ID*********************************************");
-		BuilldIndex phaseOne = new BuilldIndex();
+		BuildIndex phaseOne = new BuildIndex();
 		List<String> T13 = phaseOne.sortTuple("T1", fileName1, Constants.T1_EMP, 0, 8);
 		MergeData two3 = new MergeData(T13, new ArrayList<String>());
 		two3.performMergeSort(Constants.T1_EMP, 0, 8);
@@ -93,7 +93,7 @@ public class ProgramController {
 		System.gc();
 		System.out.println(
 				"****************************Bitmap Index for T2 Employee ID*********************************************");
-		BuilldIndex phaseOne23 = new BuilldIndex();
+		BuildIndex phaseOne23 = new BuildIndex();
 		List<String> T23 = phaseOne23.sortTuple("T2", fileName2, Constants.T2_EMP, 0, 8);
 		MergeData two33 = new MergeData(T23, new ArrayList<String>());
 		two33.performMergeSort(Constants.T2_EMP, 0, 8);

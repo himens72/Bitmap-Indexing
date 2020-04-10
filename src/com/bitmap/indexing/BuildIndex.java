@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class BuilldIndex {
+public class BuildIndex {
 	QuickSort quickSort = new QuickSort();
 	static int recordCount;
 	long sortingTime = 0;
@@ -120,7 +120,7 @@ public class BuilldIndex {
 	}
 
 	public static void setRecordCount(int recordCount) {
-		BuilldIndex.recordCount = recordCount;
+		BuildIndex.recordCount = recordCount;
 	}
 
 	public int getCurrentBlock() {
