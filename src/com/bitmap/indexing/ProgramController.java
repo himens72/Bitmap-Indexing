@@ -29,6 +29,12 @@ public class ProgramController {
 	static String fileName2 = Constants.INPUT_PATH + Constants.INPUT_FILE2;
 
 	public static void main(String[] args) throws InterruptedException {
+		String t1_employee_file ="";
+		String t2_employee_file ="";
+		String t1_gender_file ="";
+		String t2_gender_file ="";
+		String t1_department_file ="";
+		String t2_department_file ="";
 		System.out
 		.println("****************************Cleaning Directory*********************************************");
 		buildBlockDirectory(Constants.T1_EMP, "T1 Employee");
@@ -46,49 +52,61 @@ public class ProgramController {
 		System.gc();
 		System.out.println(
 				"****************************Bitmap Index for T1 Gender*********************************************");
-		PhaseOne phaseOne1 = new PhaseOne();
+		BuilldIndex phaseOne1 = new BuilldIndex();
 		List<String> T11 = phaseOne1.sortTuple("T1", fileName1, Constants.T1_GEN, 43, 44);
-		PhaseTwo two1 = new PhaseTwo(T11, new ArrayList<String>());
+		MergeData two1 = new MergeData(T11, new ArrayList<String>());
 		two1.performMergeSort(Constants.T1_GEN, 0, 1);
+		t1_gender_file = two1.getOutputPath();
 		System.gc();
 		System.out.println(
 				"****************************Bitmap Index for T1 Departmemt *********************************************");
-		PhaseOne phaseOne2 = new PhaseOne();
+		BuilldIndex phaseOne2 = new BuilldIndex();
 		List<String> T12 = phaseOne2.sortTuple("T1", fileName1, Constants.T1_DEPT, 44, 47);
-		PhaseTwo two2 = new PhaseTwo(T12, new ArrayList<String>());
+		MergeData two2 = new MergeData(T12, new ArrayList<String>());
 		two2.performMergeSort(Constants.T1_DEPT, 0, 3);
 		System.gc();
-
+		t1_department_file = two2.getOutputPath();
 		System.out.println(
 				"****************************Bitmap Index for T2 Gender*********************************************");
-		PhaseOne phaseOne21 = new PhaseOne();
+		BuilldIndex phaseOne21 = new BuilldIndex();
 		List<String> T21 = phaseOne21.sortTuple("T2", fileName2, Constants.T2_GEN, 43, 44);
-		PhaseTwo two12 = new PhaseTwo(T21, new ArrayList<String>());
+		MergeData two12 = new MergeData(T21, new ArrayList<String>());
 		two12.performMergeSort(Constants.T2_GEN, 0, 1);
+		t2_gender_file = two12.getOutputPath();
 		System.gc();
 		System.out.println(
 				"****************************Bitmap Index for T2 Departmemt *********************************************");
-		PhaseOne phaseOne22 = new PhaseOne();
+		BuilldIndex phaseOne22 = new BuilldIndex();
 		List<String> T22 = phaseOne22.sortTuple("T2", fileName2, Constants.T2_DEPT, 44, 47);
-		PhaseTwo two22 = new PhaseTwo(T22, new ArrayList<String>());
+		MergeData two22 = new MergeData(T22, new ArrayList<String>());
 		two22.performMergeSort(Constants.T2_DEPT, 0, 3);
+		t2_department_file = two22.getOutputPath();
+
 		System.gc();
 		System.out.println(
 				"****************************Bitmap Index for T1 Employee ID*********************************************");
-		PhaseOne phaseOne = new PhaseOne();
+		BuilldIndex phaseOne = new BuilldIndex();
 		List<String> T13 = phaseOne.sortTuple("T1", fileName1, Constants.T1_EMP, 0, 8);
-		PhaseTwo two3 = new PhaseTwo(T13, new ArrayList<String>());
+		MergeData two3 = new MergeData(T13, new ArrayList<String>());
 		two3.performMergeSort(Constants.T1_EMP, 0, 8);
+		t1_employee_file = two3.getOutputPath();
 		System.gc();
-
 		System.out.println(
 				"****************************Bitmap Index for T2 Employee ID*********************************************");
-		PhaseOne phaseOne23 = new PhaseOne();
+		BuilldIndex phaseOne23 = new BuilldIndex();
 		List<String> T23 = phaseOne23.sortTuple("T2", fileName2, Constants.T2_EMP, 0, 8);
-		PhaseTwo two33 = new PhaseTwo(T23, new ArrayList<String>());
+		MergeData two33 = new MergeData(T23, new ArrayList<String>());
 		two33.performMergeSort(Constants.T2_EMP, 0, 8);
+		t2_employee_file = two33.getOutputPath();
 		System.gc();
-
+		System.out.println("T1 Employee File Path : " +t1_employee_file);
+		System.out.println("T1 Department File Path : " +t1_department_file);
+		System.out.println("T1 Gender File Path : " +t1_gender_file);
+		System.out.println("T2 Employee File Path : " +t2_employee_file);
+		System.out.println("T2 Department File Path : " +t2_department_file);
+		System.out.println("T2 Gender File Path : " +t2_gender_file);
+		CompressedBitmap compressedBitmap = new CompressedBitmap();
+		compressedBitmap.generateBitmap(t1_employee_file, t2_employee_file);
 	}
 
 	public static void buildOutputDirectory() {

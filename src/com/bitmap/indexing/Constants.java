@@ -31,6 +31,7 @@ public class Constants {
 	public static final String T2_GEN = "./T2_GEN/";
 	public static final String T1_DEPT = "./T1_DEPT/";
 	public static final String T2_DEPT = "./T2_DEPT/";
+	public static final String COMPRESSED_PATH = "./COMPRESSED_BITMAP/";
 	public static final String OUTPUT_PATH = "./outputfiles/";
 	public static final String INPUT_FILE1 = "sample3.txt";
 	public static final String INPUT_FILE2 = "sample4.txt";

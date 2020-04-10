@@ -23,10 +23,9 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PhaseTwo {
+public class MergeData {
 	long mergeTtime = 0;
 	int readCount = 0;
-
 	public int getReadCount() {
 		return readCount;
 	}
@@ -87,7 +86,7 @@ public class PhaseTwo {
 		this.write = write;
 	}
 
-	public PhaseTwo(List<String> T1, List<String> T2) {
+	public MergeData(List<String> T1, List<String> T2) {
 		listOfFiles = new ArrayList<>();
 		listOfFiles.addAll(T1);
 		listOfFiles.addAll(T2);
@@ -217,10 +216,11 @@ public class PhaseTwo {
 	}
 
 	public static void setOutputPath(String outputPath) {
-		PhaseTwo.outputPath = outputPath;
+		MergeData.outputPath = outputPath;
 	}
 
 	public void performMergeSort(String directory, int startIndex, int endIndex) {
+		itertion = 0;
 		mergeSort(listOfFiles, directory, startIndex, endIndex);
 	}
 

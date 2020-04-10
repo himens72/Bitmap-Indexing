@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PhaseOne {
+public class BuilldIndex {
 	QuickSort quickSort = new QuickSort();
 	static int recordCount;
 	long sortingTime = 0;
@@ -41,7 +41,7 @@ public class PhaseOne {
 			br = new BufferedReader(new FileReader(path));
 			boolean run = true;
 
-			long blockSize = ((Constants.TOTAL_MEMORY * 5) / (100 * 1000));
+			long blockSize = ((Constants.TOTAL_MEMORY * 7) / (100 * 1000));
 			firstFile = blockSize;
 			long begin = System.currentTimeMillis();
 			while (run) {
@@ -120,7 +120,7 @@ public class PhaseOne {
 	}
 
 	public static void setRecordCount(int recordCount) {
-		PhaseOne.recordCount = recordCount;
+		BuilldIndex.recordCount = recordCount;
 	}
 
 	public int getCurrentBlock() {
