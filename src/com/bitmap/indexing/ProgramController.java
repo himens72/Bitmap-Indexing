@@ -1,26 +1,6 @@
 package com.bitmap.indexing;
 
-/*
-1.	https://www.geeksforgeeks.org/java-program-for-quicksort/
-2.	https://examples.javacodegeeks.com/core-java/nio/bytebuffer/write-append-to-file-with-byte-buffer/
-3.	https://www.geeksforgeeks.org/bytebuffer-get-method-in-java-with-examples/
-4.	http://rosettacode.org/wiki/Binary_search#Java
-5.	https://en.wikipedia.org/wiki/Sorting_algorithm
-6.	https://crunchify.com/increase-eclipse-memory-size-to-avoid-oom-on-startup/
-7.	https://github.com/sagarvetal/ADB_Project_1_TPMMS
-8.	https://howtodoinjava.com/java/io/how-to-check-if-file-exists-in-java/
-9.	https://www.javadevjournal.com/java/java-copy-file-directory/
-10.	https://mkyong.com/java/how-to-delete-directory-in-java/
-11.	https://www.tutorialspoint.com/how-to-create-a-new-directory-by-using-file-object-in-java
-12.	https://www.tutorialspoint.com/java/io/file_isfile.htm
-13.	http://www.mathcs.emory.edu/~cheung/Courses/554/Syllabus/4-query-exec/2-pass=TPMMS.html
-14.	http://www.mathcs.emory.edu/~cheung/Courses/554/Syllabus/4-query-exec/TPMMS=join2.html
- */
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,23 +9,25 @@ public class ProgramController {
 	static String fileName2 = Constants.INPUT_PATH + Constants.INPUT_FILE2;
 
 	public static void main(String[] args) throws InterruptedException {
-		String t1_employee_file ="";
-		String t2_employee_file ="";
-		String t1_gender_file ="";
-		String t2_gender_file ="";
-		String t1_department_file ="";
-		String t2_department_file ="";
+		String t1_employee_file = "";
+		String t2_employee_file = "";
+		String t1_gender_file = "";
+		String t2_gender_file = "";
+		String t1_department_file = "";
+		String t2_department_file = "";
 		System.out
 		.println("****************************Cleaning Directory*********************************************");
+		buildBlockDirectory(Constants.T1_T2, "T1_T2");
+		buildBlockDirectory(Constants.COMPRESSED_PATH, "COMPRESSED BITMAP");
 		buildBlockDirectory(Constants.T1_EMP, "T1 Employee");
 		buildBlockDirectory(Constants.T2_EMP, "T2 Employee");
 		buildBlockDirectory(Constants.T1_DEPT, "T1 Department");
 		buildBlockDirectory(Constants.T2_DEPT, "T2 Department");
 		buildBlockDirectory(Constants.T1_GEN, "T1 Gender");
 		buildBlockDirectory(Constants.T2_GEN, "T2 Gender");
+		
 		buildOutputDirectory();
 		System.out.println("Diretory Cleaned");
-		System.out.println("****************************TPMMS Console*********************************************");
 		System.gc();
 		System.out.println("Memory Size :  " + getMemorySize());
 		System.out.println("Tuple Size : " + Constants.TUPLE_SIZE);
@@ -99,14 +81,20 @@ public class ProgramController {
 		two33.performMergeSort(Constants.T2_EMP, 0, 8);
 		t2_employee_file = two33.getOutputPath();
 		System.gc();
-		System.out.println("T1 Employee File Path : " +t1_employee_file);
-		System.out.println("T1 Department File Path : " +t1_department_file);
-		System.out.println("T1 Gender File Path : " +t1_gender_file);
-		System.out.println("T2 Employee File Path : " +t2_employee_file);
-		System.out.println("T2 Department File Path : " +t2_department_file);
-		System.out.println("T2 Gender File Path : " +t2_gender_file);
+		System.out.println("T1 Employee File Path : " + t1_employee_file);
+		System.out.println("T1 Department File Path : " + t1_department_file);
+		System.out.println("T1 Gender File Path : " + t1_gender_file);
+		System.out.println("T2 Employee File Path : " + t2_employee_file);
+		System.out.println("T2 Department File Path : " + t2_department_file);
+		System.out.println("T2 Gender File Path : " + t2_gender_file);
 		CompressedBitmap compressedBitmap = new CompressedBitmap();
-		compressedBitmap.generateBitmap(t1_employee_file, t2_employee_file);
+		compressedBitmap.generateBitmap(t1_employee_file, "T1_EMPLOYEE");
+		compressedBitmap.generateBitmap(t2_employee_file, "T2_EMPLOYEE");
+		List<String> listT1T2 = new ArrayList<String>();
+		listT1T2.add(t1_employee_file);
+		listT1T2.add(t2_employee_file);
+		MergeData mergeDataT1T2 = new MergeData(listT1T2, new ArrayList<String>());
+		mergeDataT1T2.performMergeSort(Constants.T1_T2, 0, 8);
 	}
 
 	public static void buildOutputDirectory() {

@@ -15,7 +15,7 @@ package com.bitmap.indexing;
 12.	https://www.tutorialspoint.com/java/io/file_isfile.htm
 13.	http://www.mathcs.emory.edu/~cheung/Courses/554/Syllabus/4-query-exec/2-pass=TPMMS.html
 14.	http://www.mathcs.emory.edu/~cheung/Courses/554/Syllabus/4-query-exec/TPMMS=join2.html
-*/
+ */
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -26,6 +26,7 @@ import java.util.List;
 public class MergeData {
 	long mergeTtime = 0;
 	int readCount = 0;
+
 	public int getReadCount() {
 		return readCount;
 	}
@@ -150,7 +151,7 @@ public class MergeData {
 									temp.append(0);
 								}
 								bw.write(tuple2.substring(0, endIndex + 1) + temp.toString()
-										+ tuple2.substring(endIndex + 1));
+								+ tuple2.substring(endIndex + 1));
 								bw.newLine();
 								tuple2 = null;
 							} else if (id1.compareToIgnoreCase(id2) < 0) { // id1 > id2
@@ -178,7 +179,7 @@ public class MergeData {
 									temp.append(0);
 								}
 								bw.write(tuple2.substring(0, endIndex + 1) + temp.toString()
-										+ tuple2.substring(endIndex + 1));
+								+ tuple2.substring(endIndex + 1));
 								bw.newLine();
 								tuple2 = null;
 							}

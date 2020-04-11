@@ -24,10 +24,13 @@ public class Constants {
 	public static final int MEMORY_SIZE = (TOTAL_MEMORY / BLOCK_SIZE) * BLOCK_SIZE;
 	public static final int MAX_RECORD = 40;
 	public static final String INPUT_PATH = "./inputfiles/";
-	public static final String BLOCK_PATH = "./T1_EMP/";
+	public static final String T1_BLOCK_PATH = "./T1_BLOCK/";
+	public static final String T2_BLOCK_PATH = "./T2_BLOCK/";
 	public static final String T1_EMP = "./T1_EMP/";
 	public static final String T2_EMP = "./T2_EMP/";
 	public static final String T1_GEN = "./T1_GEN/";
+	public static final String T1_T2 = "./T1_T2/";
+
 	public static final String T2_GEN = "./T2_GEN/";
 	public static final String T1_DEPT = "./T1_DEPT/";
 	public static final String T2_DEPT = "./T2_DEPT/";

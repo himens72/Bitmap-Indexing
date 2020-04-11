@@ -18,13 +18,11 @@ package com.bitmap.indexing;
  */
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class BuildIndex {
 	QuickSort quickSort = new QuickSort();
@@ -41,7 +39,7 @@ public class BuildIndex {
 			br = new BufferedReader(new FileReader(path));
 			boolean run = true;
 
-			long blockSize = ((Constants.TOTAL_MEMORY * 7) / (100 * 1000));
+			long blockSize = ((Constants.TOTAL_MEMORY * 5) / (100 * 1000));
 			firstFile = blockSize;
 			long begin = System.currentTimeMillis();
 			while (run) {
@@ -94,8 +92,6 @@ public class BuildIndex {
 			sortingTime += (System.currentTimeMillis() - begin);
 			System.out.println("Time taken to create block " + tuple + " : " + (System.currentTimeMillis() - begin)
 					+ "ms (" + (System.currentTimeMillis() - begin) / 1000.0 + "sec)");
-			System.out.println("First File " + firstFile);
-			System.out.println("Last File " + lastFile);
 			System.gc();
 		} catch (FileNotFoundException e) {
 			System.out.println("The File doesn't Exist : " + e);
