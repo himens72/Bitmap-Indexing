@@ -37,7 +37,7 @@ public class ProgramController {
 		buildBlockDirectory(Constants.T2_DEPT, "T2 Department");
 		buildBlockDirectory(Constants.T1_GEN, "T1 Gender");
 		buildBlockDirectory(Constants.T2_GEN, "T2 Gender");
-
+buildOutputDirectory();
 		buildOutputDirectory();
 		System.out.println("Diretory Cleaned");
 		System.gc();
@@ -121,6 +121,9 @@ public class ProgramController {
 		System.out.println("Total Time   " + (P1T2EMP.getSortingTime() + P2T2EMP.getMergeTtime()) + " ms ( ~approx "
 				+ ((P2T2EMP.getMergeTtime() + P1T2EMP.getSortingTime()) / 1000) + " sec)");
 		System.gc();
+		System.out
+		.println("****************************Path  List*********************************************");
+
 		System.out.println("T1 Employee File Path : " + t1_employee_file);
 		System.out.println("T1 Department File Path : " + t1_department_file);
 		System.out.println("T1 Gender File Path : " + t1_gender_file);
@@ -128,6 +131,8 @@ public class ProgramController {
 		System.out.println("T2 Department File Path : " + t2_department_file);
 		System.out.println("T2 Gender File Path : " + t2_gender_file);
 		CompressedBitmap compressedBitmap = new CompressedBitmap();
+		System.out
+		.println("****************************Compressed Bitmap Output*********************************************");
 
 		compressedBitmap.generateBitmap(t1_employee_file, "T1_EMPLOYEE", 8);
 		compressedBitmap.generateBitmap(t2_employee_file, "T2_EMPLOYEE", 8);
@@ -135,6 +140,9 @@ public class ProgramController {
 		compressedBitmap.generateBitmap(t2_department_file, "T2_DEPARTMENT", 3);
 		compressedBitmap.generateBitmap(t1_gender_file, "T1_GENDER", 1);
 		compressedBitmap.generateBitmap(t2_gender_file, "T2_GENDER", 1);
+		System.out
+		.println("****************************List of Unique Data*********************************************");
+
 		mergeSort(t1_employee_file, t2_employee_file, T1List, T2List);
 		/*
 		 * List<String> listT1T2 = new ArrayList<String>();
@@ -157,7 +165,7 @@ public class ProgramController {
 		try {
 			BufferedReader br1 = new BufferedReader(new FileReader(file1));
 			BufferedReader br2 = new BufferedReader(new FileReader(file2));
-			BufferedWriter bw = new BufferedWriter(new FileWriter("output.txt"));
+			BufferedWriter bw = new BufferedWriter(new FileWriter(Constants.OUTPUT_PATH +"output.txt"));
 			String tuple1 = null;
 			String tuple2 = null;
 			long length1 = 0;
