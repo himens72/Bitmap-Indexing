@@ -38,7 +38,7 @@ public class BuildIndex {
 		try {
 			br = new BufferedReader(new FileReader(path));
 			boolean run = true;
-
+			sortingTime = 0;
 			long blockSize = ((Constants.TOTAL_MEMORY * 5) / (100 * 1000));
 			firstFile = blockSize;
 			long begin = System.currentTimeMillis();
@@ -101,6 +101,49 @@ public class BuildIndex {
 			System.exit(1);
 		}
 		return subListName;
+	}
+
+	public ArrayList<String> buildBlock(String tuple, String path, String directory) {
+		long data_count = 0;
+		ArrayList<String> temp = new ArrayList<>();
+		try {
+			br = new BufferedReader(new FileReader(path));
+			boolean run = true;
+			long blockSize = ((Constants.TOTAL_MEMORY * 5) / (100 * 1000));
+			while (run) {
+				String record = null;
+				ArrayList<String> subList = new ArrayList<>();
+
+				while ((record = br.readLine()) != null) {
+					subList.add(record);
+					recordCount++;
+					++data_count;
+					if (data_count == blockSize) {
+						data_count = 0;
+						break;
+					}
+				}
+				String outputFile = directory + "/Block-" + currentBlock;
+				BufferedWriter write = new BufferedWriter(new FileWriter(outputFile));
+				for (int i = 0; i < subList.size(); i++) {
+					write.write(subList.get(i));
+					write.newLine();
+				}
+				write.close();
+				temp.add(outputFile);
+
+				if (record == null)
+					break;
+				currentBlock++;
+			}
+		} catch (FileNotFoundException e) {
+			System.out.println("The File doesn't Exist : " + path);
+			System.exit(1);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		return temp;
 	}
 
 	public long getSortingTime() {

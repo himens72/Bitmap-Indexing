@@ -201,9 +201,11 @@ public class MergeData {
 			}
 		}
 		mergeTtime += (System.currentTimeMillis() - itertionStart);
-		System.out.println("Round " + itertion + " Merging Time : " + (System.currentTimeMillis() - itertionStart)
-				+ "ms" + "(" + "~approx " + (System.currentTimeMillis() - itertionStart) / 1000.0 + "sec)");
-
+		/*
+		 * System.out.println("Round " + itertion + " Merging Time : " +
+		 * (System.currentTimeMillis() - itertionStart) + "ms" + "(" + "~approx " +
+		 * (System.currentTimeMillis() - itertionStart) / 1000.0 + "sec)");
+		 */
 		if (mergedFiles.size() > 1) {
 			itertion++;
 			mergeSort(mergedFiles, directory, startIndex, endIndex);

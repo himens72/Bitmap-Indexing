@@ -1,12 +1,22 @@
 package com.bitmap.indexing;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import sun.security.util.math.intpoly.P384OrderField;
 
 public class ProgramController {
 	static String fileName1 = Constants.INPUT_PATH + Constants.INPUT_FILE1;
 	static String fileName2 = Constants.INPUT_PATH + Constants.INPUT_FILE2;
+	static long blockSize = ((Constants.TOTAL_MEMORY * 5) / (100 * 1000));
+	static QuickSort quickSort = new QuickSort();
 
 	public static void main(String[] args) throws InterruptedException {
 		String t1_employee_file = "";
@@ -17,6 +27,8 @@ public class ProgramController {
 		String t2_department_file = "";
 		System.out
 		.println("****************************Cleaning Directory*********************************************");
+		buildBlockDirectory(Constants.T1_BLOCK_PATH, "T1 Tuples");
+		buildBlockDirectory(Constants.T2_BLOCK_PATH, "T1 Tuples");
 		buildBlockDirectory(Constants.T1_T2, "T1_T2");
 		buildBlockDirectory(Constants.COMPRESSED_PATH, "COMPRESSED BITMAP");
 		buildBlockDirectory(Constants.T1_EMP, "T1 Employee");
@@ -25,61 +37,89 @@ public class ProgramController {
 		buildBlockDirectory(Constants.T2_DEPT, "T2 Department");
 		buildBlockDirectory(Constants.T1_GEN, "T1 Gender");
 		buildBlockDirectory(Constants.T2_GEN, "T2 Gender");
-		
+
 		buildOutputDirectory();
 		System.out.println("Diretory Cleaned");
 		System.gc();
 		System.out.println("Memory Size :  " + getMemorySize());
 		System.out.println("Tuple Size : " + Constants.TUPLE_SIZE);
 		System.gc();
+		BuildIndex buildT1 = new BuildIndex();
+		List<String> T1List = buildT1.buildBlock("T1", fileName1, Constants.T1_BLOCK_PATH);
+		BuildIndex buildT2 = new BuildIndex();
+		List<String> T2List = buildT2.buildBlock("T2", fileName2, Constants.T2_BLOCK_PATH);
+
 		System.out.println(
 				"****************************Bitmap Index for T1 Gender*********************************************");
-		BuildIndex phaseOne1 = new BuildIndex();
-		List<String> T11 = phaseOne1.sortTuple("T1", fileName1, Constants.T1_GEN, 43, 44);
-		MergeData two1 = new MergeData(T11, new ArrayList<String>());
-		two1.performMergeSort(Constants.T1_GEN, 0, 1);
-		t1_gender_file = two1.getOutputPath();
+		BuildIndex P1T1GENDER = new BuildIndex();
+		List<String> T11 = P1T1GENDER.sortTuple("T1", fileName1, Constants.T1_GEN, 43, 44);
+		MergeData P2T1GENDER = new MergeData(T11, new ArrayList<String>());
+		P2T1GENDER.performMergeSort(Constants.T1_GEN, 0, 1);
+		t1_gender_file = P2T1GENDER.getOutputPath();
+		System.out.println("Time Taken to merge data  " + (P2T1GENDER.getMergeTtime()) + " ms ( ~approx "
+				+ ((P2T1GENDER.getMergeTtime()) / 1000) + " sec)");
+		System.out.println("Total Time   " + (P1T1GENDER.getSortingTime() + P2T1GENDER.getMergeTtime()) + " ms ( ~approx "
+				+ ((P2T1GENDER.getMergeTtime() + P1T1GENDER.getSortingTime()) / 1000) + " sec)");
 		System.gc();
 		System.out.println(
 				"****************************Bitmap Index for T1 Departmemt *********************************************");
-		BuildIndex phaseOne2 = new BuildIndex();
-		List<String> T12 = phaseOne2.sortTuple("T1", fileName1, Constants.T1_DEPT, 44, 47);
-		MergeData two2 = new MergeData(T12, new ArrayList<String>());
-		two2.performMergeSort(Constants.T1_DEPT, 0, 3);
+		BuildIndex P1T1DEPT = new BuildIndex();
+		List<String> T12 = P1T1DEPT.sortTuple("T1", fileName1, Constants.T1_DEPT, 44, 47);
+		MergeData P2T1DEPT = new MergeData(T12, new ArrayList<String>());
+		P2T1DEPT.performMergeSort(Constants.T1_DEPT, 0, 3);
 		System.gc();
-		t1_department_file = two2.getOutputPath();
+		t1_department_file = P2T1DEPT.getOutputPath();
+		System.out.println("Time Taken to merge data  " + (P2T1DEPT.getMergeTtime()) + " ms ( ~approx "
+				+ ((P2T1DEPT.getMergeTtime()) / 1000) + " sec)");
+		System.out.println("Total Time   " + (P1T1DEPT.getSortingTime() + P2T1DEPT.getMergeTtime()) + " ms ( ~approx "
+				+ ((P2T1DEPT.getMergeTtime() + P1T1DEPT.getSortingTime()) / 1000) + " sec)");
 		System.out.println(
 				"****************************Bitmap Index for T2 Gender*********************************************");
-		BuildIndex phaseOne21 = new BuildIndex();
-		List<String> T21 = phaseOne21.sortTuple("T2", fileName2, Constants.T2_GEN, 43, 44);
-		MergeData two12 = new MergeData(T21, new ArrayList<String>());
-		two12.performMergeSort(Constants.T2_GEN, 0, 1);
-		t2_gender_file = two12.getOutputPath();
+		BuildIndex P1T2GENDER = new BuildIndex();
+		List<String> T21 = P1T2GENDER.sortTuple("T2", fileName2, Constants.T2_GEN, 43, 44);
+		MergeData P2T2GENDER = new MergeData(T21, new ArrayList<String>());
+		P2T2GENDER.performMergeSort(Constants.T2_GEN, 0, 1);
+		t2_gender_file = P2T2GENDER.getOutputPath();
+		System.out.println("Time Taken to merge data  " + (P2T2GENDER.getMergeTtime()) + " ms ( ~approx "
+				+ ((P2T2GENDER.getMergeTtime()) / 1000) + " sec)");
+		System.out.println("Total Time   " + (P1T2GENDER.getSortingTime() + P2T2GENDER.getMergeTtime()) + " ms ( ~approx "
+				+ ((P2T2GENDER.getMergeTtime() + P1T2GENDER.getSortingTime()) / 1000) + " sec)");
 		System.gc();
 		System.out.println(
 				"****************************Bitmap Index for T2 Departmemt *********************************************");
-		BuildIndex phaseOne22 = new BuildIndex();
-		List<String> T22 = phaseOne22.sortTuple("T2", fileName2, Constants.T2_DEPT, 44, 47);
-		MergeData two22 = new MergeData(T22, new ArrayList<String>());
-		two22.performMergeSort(Constants.T2_DEPT, 0, 3);
-		t2_department_file = two22.getOutputPath();
-
+		BuildIndex P1T2DEPT = new BuildIndex();
+		List<String> T22 = P1T2DEPT.sortTuple("T2", fileName2, Constants.T2_DEPT, 44, 47);
+		MergeData P2T2DEPT = new MergeData(T22, new ArrayList<String>());
+		P2T2DEPT.performMergeSort(Constants.T2_DEPT, 0, 3);
+		t2_department_file = P2T2DEPT.getOutputPath();
+		System.out.println("Time Taken to merge data  " + (P2T2DEPT.getMergeTtime()) + " ms ( ~approx "
+				+ ((P2T2DEPT.getMergeTtime()) / 1000) + " sec)");
+		System.out.println("Total Time   " + (P1T2DEPT.getSortingTime() + P2T2DEPT.getMergeTtime()) + " ms ( ~approx "
+				+ ((P2T2DEPT.getMergeTtime() + P1T2DEPT.getSortingTime()) / 1000) + " sec)");
 		System.gc();
 		System.out.println(
 				"****************************Bitmap Index for T1 Employee ID*********************************************");
-		BuildIndex phaseOne = new BuildIndex();
-		List<String> T13 = phaseOne.sortTuple("T1", fileName1, Constants.T1_EMP, 0, 8);
-		MergeData two3 = new MergeData(T13, new ArrayList<String>());
-		two3.performMergeSort(Constants.T1_EMP, 0, 8);
-		t1_employee_file = two3.getOutputPath();
+		BuildIndex P1T1EMP = new BuildIndex();
+		List<String> T13 = P1T1EMP.sortTuple("T1", fileName1, Constants.T1_EMP, 0, 8);
+		MergeData P2T1EMP = new MergeData(T13, new ArrayList<String>());
+		P2T1EMP.performMergeSort(Constants.T1_EMP, 0, 8);
+		t1_employee_file = P2T1EMP.getOutputPath();
+		System.out.println("Time Taken to merge data  " + (P2T1EMP.getMergeTtime()) + " ms ( ~approx "
+				+ ((P2T1EMP.getMergeTtime()) / 1000) + " sec)");
+		System.out.println("Total Time   " + (P1T1EMP.getSortingTime() + P2T1EMP.getMergeTtime()) + " ms ( ~approx "
+				+ ((P2T1EMP.getMergeTtime() + P1T1EMP.getSortingTime()) / 1000) + " sec)");
 		System.gc();
 		System.out.println(
 				"****************************Bitmap Index for T2 Employee ID*********************************************");
-		BuildIndex phaseOne23 = new BuildIndex();
-		List<String> T23 = phaseOne23.sortTuple("T2", fileName2, Constants.T2_EMP, 0, 8);
-		MergeData two33 = new MergeData(T23, new ArrayList<String>());
-		two33.performMergeSort(Constants.T2_EMP, 0, 8);
-		t2_employee_file = two33.getOutputPath();
+		BuildIndex P1T2EMP = new BuildIndex();
+		List<String> T23 = P1T2EMP.sortTuple("T2", fileName2, Constants.T2_EMP, 0, 8);
+		MergeData P2T2EMP = new MergeData(T23, new ArrayList<String>());
+		P2T2EMP.performMergeSort(Constants.T2_EMP, 0, 8);
+		t2_employee_file = P2T2EMP.getOutputPath();
+		System.out.println("Time Taken to merge data  " + (P2T2EMP.getMergeTtime()) + " ms ( ~approx "
+				+ ((P2T2EMP.getMergeTtime()) / 1000) + " sec)");
+		System.out.println("Total Time   " + (P1T2EMP.getSortingTime() + P2T2EMP.getMergeTtime()) + " ms ( ~approx "
+				+ ((P2T2EMP.getMergeTtime() + P1T2EMP.getSortingTime()) / 1000) + " sec)");
 		System.gc();
 		System.out.println("T1 Employee File Path : " + t1_employee_file);
 		System.out.println("T1 Department File Path : " + t1_department_file);
@@ -88,13 +128,250 @@ public class ProgramController {
 		System.out.println("T2 Department File Path : " + t2_department_file);
 		System.out.println("T2 Gender File Path : " + t2_gender_file);
 		CompressedBitmap compressedBitmap = new CompressedBitmap();
-		compressedBitmap.generateBitmap(t1_employee_file, "T1_EMPLOYEE");
-		compressedBitmap.generateBitmap(t2_employee_file, "T2_EMPLOYEE");
-		List<String> listT1T2 = new ArrayList<String>();
-		listT1T2.add(t1_employee_file);
-		listT1T2.add(t2_employee_file);
-		MergeData mergeDataT1T2 = new MergeData(listT1T2, new ArrayList<String>());
-		mergeDataT1T2.performMergeSort(Constants.T1_T2, 0, 8);
+
+		compressedBitmap.generateBitmap(t1_employee_file, "T1_EMPLOYEE", 8);
+		compressedBitmap.generateBitmap(t2_employee_file, "T2_EMPLOYEE", 8);
+		compressedBitmap.generateBitmap(t1_department_file, "T1_DEPARTMENT", 3);
+		compressedBitmap.generateBitmap(t2_department_file, "T2_DEPARTMENT", 3);
+		compressedBitmap.generateBitmap(t1_gender_file, "T1_GENDER", 1);
+		compressedBitmap.generateBitmap(t2_gender_file, "T2_GENDER", 1);
+		mergeSort(t1_employee_file, t2_employee_file, T1List, T2List);
+		/*
+		 * List<String> listT1T2 = new ArrayList<String>();
+		 * listT1T2.add(t1_employee_file); listT1T2.add(t2_employee_file); MergeData
+		 * mergeDataT1T2 = new MergeData(listT1T2, new ArrayList<String>());
+		 * mergeDataT1T2.performMergeSort(Constants.T1_T2, 0, 8);
+		 */
+	}
+
+	private static int getMemorySize() {
+		return (int) (Runtime.getRuntime().totalMemory() / (1024 * 1024));
+	}
+
+	public static int getTotalBlocks(final int fileSize, final int blockSize) {
+		return (int) Math.ceil((double) fileSize / blockSize);
+	}
+
+	public static void mergeSort(String file1, String file2, List<String> T1List, List<String> T2List) {
+		long itertionStart = System.currentTimeMillis();
+		try {
+			BufferedReader br1 = new BufferedReader(new FileReader(file1));
+			BufferedReader br2 = new BufferedReader(new FileReader(file2));
+			BufferedWriter bw = new BufferedWriter(new FileWriter("output.txt"));
+			String tuple1 = null;
+			String tuple2 = null;
+			long length1 = 0;
+			long length2 = 0;
+			while (true) {
+				if (tuple1 == null) {
+					tuple1 = br1.readLine();
+					length1 = tuple1 == null || tuple1.trim().length() == 0 ? length1
+							: tuple1.substring(8 + 1).trim().length();
+				}
+				if (tuple2 == null) {
+					tuple2 = br2.readLine();
+					length2 = tuple2 == null || tuple2.trim().length() == 0 ? length2
+							: tuple2.substring(8 + 1).trim().length();
+				}
+				if (tuple1 == null && tuple2 == null) {
+					break;
+				}
+				if (tuple1 != null && tuple2 != null) {
+					String id1 = tuple1.substring(0, 8);
+					String id2 = tuple2.substring(0, 8);
+					if (id1.equals(id2)) {
+						ArrayList<String> subList = new ArrayList<String>();
+						List<Integer> temp = findWordUpgrade(tuple1.substring(8 + 1), "1");
+						int count = 0;
+						while (!temp.isEmpty()) {
+							int tmpvalue = temp.get(0);
+							// System.out.println("File Number " + tmpvalue);
+							temp.remove(0);
+							count++;
+							while (!temp.isEmpty()) {
+								if (temp.get(0) == tmpvalue) {
+									temp.remove(0);
+									count++;
+								} else
+									break;
+							}
+							// System.out.println("Count " + count);
+							subList.add(getLatestTuple(id1, tmpvalue, "T1", count, Constants.T1_BLOCK_PATH));
+							count = 0;
+						}
+						List<Integer> temp1 = findWordUpgrade(tuple2.substring(8 + 1), "1");
+						int count1 = 0;
+						while (!temp1.isEmpty()) {
+							int tmpvalue = temp1.get(0);
+							temp1.remove(0);
+							count1++;
+							while (!temp1.isEmpty()) {
+								if (temp1.get(0) == tmpvalue) {
+									temp1.remove(0);
+									count1++;
+								} else
+									break;
+							}
+							subList.add(getLatestTuple(id1, tmpvalue, "T2", count1, Constants.T2_BLOCK_PATH));
+							count1 = 0;
+						}
+						subList = quickSort.executeQuickSort(subList, 0, 18);
+						bw.write(subList.get(subList.size() - 1));
+						bw.newLine();
+						tuple1 = null;
+						tuple2 = null;
+					} else if (id1.compareToIgnoreCase(id2) > 0) {
+						ArrayList<String> subList = new ArrayList<String>();
+						List<Integer> temp1 = findWordUpgrade(tuple2.substring(8 + 1), "1");
+						// System.out.println(id2 + " : Case 2 " + temp1);
+						int count1 = 0;
+						while (!temp1.isEmpty()) {
+							int tmpvalue = temp1.get(0);
+							// System.out.println("File Number " + tmpvalue);
+							temp1.remove(0);
+							count1++;
+							while (!temp1.isEmpty()) {
+								if (temp1.get(0) == tmpvalue) {
+									temp1.remove(0);
+									count1++;
+								} else
+									break;
+							}
+							// System.out.println("Dulicates " + count1);
+							subList.add(getLatestTuple(id2, tmpvalue, "T2", count1, Constants.T2_BLOCK_PATH));
+							count1 = 0;
+						}
+						// System.out.println(subList.size());
+						subList = quickSort.executeQuickSort(subList, 0, 18);
+						bw.write(subList.get(subList.size() - 1));
+						bw.newLine();
+						tuple2 = null;
+					} else if (id1.compareToIgnoreCase(id2) < 0) {
+						ArrayList<String> subList = new ArrayList<String>();
+						List<Integer> temp = findWordUpgrade(tuple1.substring(8 + 1), "1");
+						int count = 0;
+						while (!temp.isEmpty()) {
+							int tmpvalue = temp.get(0);
+							temp.remove(0);
+							count++;
+							while (!temp.isEmpty()) {
+								if (temp.get(0) == tmpvalue) {
+									temp.remove(0);
+									count++;
+								} else
+									break;
+							}
+							subList.add(getLatestTuple(id1, tmpvalue, "T1", count, Constants.T1_BLOCK_PATH));
+							count = 0;
+						}
+						subList = quickSort.executeQuickSort(subList, 0, 18);
+						bw.write(subList.get(subList.size() - 1));
+						bw.newLine();
+						tuple1 = null;
+					}
+				} else {
+					if (tuple1 != null) {
+						ArrayList<String> subList = new ArrayList<String>();
+						List<Integer> temp = findWordUpgrade(tuple1.substring(8 + 1), "1");
+						int count = 0;
+						while (!temp.isEmpty()) {
+							int tmpvalue = temp.get(0);
+							temp.remove(0);
+							count++;
+							while (!temp.isEmpty()) {
+								if (temp.get(0) == tmpvalue) {
+									temp.remove(0);
+									count++;
+								} else
+									break;
+							}
+							subList.add(getLatestTuple(tuple1.substring(0, 8), tmpvalue, "T1", count,
+									Constants.T1_BLOCK_PATH));
+							count = 0;
+						}
+						subList = quickSort.executeQuickSort(subList, 0, 18);
+						bw.write(subList.get(subList.size() - 1));
+						bw.newLine();
+						tuple1 = null;
+					} else {
+						StringBuilder temp = new StringBuilder();
+						ArrayList<String> subList = new ArrayList<String>();
+						List<Integer> temp1 = findWordUpgrade(tuple2.substring(8 + 1), "1");
+						int count1 = 0;
+						while (!temp1.isEmpty()) {
+							int tmpvalue = temp1.get(0);
+							temp1.remove(0);
+							count1++;
+							while (!temp1.isEmpty()) {
+								if (temp1.get(0) == tmpvalue) {
+									temp1.remove(0);
+									count1++;
+								} else
+									break;
+							}
+							subList.add(getLatestTuple(tuple2.substring(0, 8), tmpvalue, "T2", count1,
+									Constants.T2_BLOCK_PATH));
+							count1 = 0;
+						}
+						subList = quickSort.executeQuickSort(subList, 0, 18);
+						bw.write(subList.get(subList.size() - 1));
+						bw.newLine();
+						tuple2 = null;
+					}
+				}
+			}
+			bw.close();
+			br1.close();
+			br2.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(" Final Time to return output : " + (System.currentTimeMillis() - itertionStart) + "ms" + "("
+				+ "~approx " + (System.currentTimeMillis() - itertionStart) / 1000.0 + " sec)");
+	}
+
+	public static String getLatestTuple(String empId, int fileNum, String tuple, int count, String directory) {
+		String filePath = directory + "/Block-" + fileNum;
+		// System.out.println("File Path " + filePath);
+		BufferedReader br1 = null;
+		try {
+			br1 = new BufferedReader(new FileReader(filePath));
+			String record = "";
+			ArrayList<String> subList = new ArrayList<String>();
+			while ((record = br1.readLine()) != null) {
+				if (record.substring(0, 8).equals(empId.trim())) {
+					subList.add(record);
+					//System.out.println("True");
+				}
+				if (subList.size() == count)
+					break;
+			}
+			subList = quickSort.executeQuickSort(subList, 0, 18);
+			br1.close();
+			return subList.get(subList.size() - 1);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "";
+	}
+
+	public static List<Integer> findWordUpgrade(String textString, String word) {
+		List<Integer> indexes = new ArrayList<Integer>();
+		int wordLength = 0;
+		int index = 0;
+		while (index != -1) {
+			index = textString.indexOf(word, index + wordLength);
+			if (index != -1) {
+				indexes.add((int) (index / blockSize));
+			}
+			wordLength = word.length();
+		}
+		return indexes;
 	}
 
 	public static void buildOutputDirectory() {
@@ -133,11 +410,4 @@ public class ProgramController {
 		}
 	}
 
-	private static int getMemorySize() {
-		return (int) (Runtime.getRuntime().totalMemory() / (1024 * 1024));
-	}
-
-	public static int getTotalBlocks(final int fileSize, final int blockSize) {
-		return (int) Math.ceil((double) fileSize / blockSize);
-	}
 }
