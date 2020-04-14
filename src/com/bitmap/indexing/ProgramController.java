@@ -56,6 +56,9 @@ buildOutputDirectory();
 		MergeData P2T1GENDER = new MergeData(T11, new ArrayList<String>());
 		P2T1GENDER.performMergeSort(Constants.T1_GEN, 0, 1);
 		t1_gender_file = P2T1GENDER.getOutputPath();
+		System.out.println("Read Count " + P2T1GENDER.getReadCount());
+		System.out.println("Write Count "  + (P2T1GENDER.getWriteCount() - P2T1GENDER.getWrite()));
+		System.out.println("Unique Data "  + P2T1GENDER.getWrite());
 		System.out.println("Time Taken to merge data  " + (P2T1GENDER.getMergeTtime()) + " ms ( ~approx "
 				+ ((P2T1GENDER.getMergeTtime()) / 1000) + " sec)");
 		System.out.println("Total Time   " + (P1T1GENDER.getSortingTime() + P2T1GENDER.getMergeTtime()) + " ms ( ~approx "
@@ -69,6 +72,9 @@ buildOutputDirectory();
 		P2T1DEPT.performMergeSort(Constants.T1_DEPT, 0, 3);
 		System.gc();
 		t1_department_file = P2T1DEPT.getOutputPath();
+		System.out.println("Read Count " + P2T1DEPT.getReadCount());
+		System.out.println("Write Count "  + (P2T1DEPT.getWriteCount() - P2T1DEPT.getWrite()));
+		System.out.println("Unique Data "  + P2T1DEPT.getWrite());
 		System.out.println("Time Taken to merge data  " + (P2T1DEPT.getMergeTtime()) + " ms ( ~approx "
 				+ ((P2T1DEPT.getMergeTtime()) / 1000) + " sec)");
 		System.out.println("Total Time   " + (P1T1DEPT.getSortingTime() + P2T1DEPT.getMergeTtime()) + " ms ( ~approx "
@@ -80,6 +86,9 @@ buildOutputDirectory();
 		MergeData P2T2GENDER = new MergeData(T21, new ArrayList<String>());
 		P2T2GENDER.performMergeSort(Constants.T2_GEN, 0, 1);
 		t2_gender_file = P2T2GENDER.getOutputPath();
+		System.out.println("Read Count " + P2T2GENDER.getReadCount());
+		System.out.println("Write Count "  + (P2T2GENDER.getWriteCount() - P2T2GENDER.getWrite()));
+		System.out.println("Unique Data "  + P2T2GENDER.getWrite());
 		System.out.println("Time Taken to merge data  " + (P2T2GENDER.getMergeTtime()) + " ms ( ~approx "
 				+ ((P2T2GENDER.getMergeTtime()) / 1000) + " sec)");
 		System.out.println("Total Time   " + (P1T2GENDER.getSortingTime() + P2T2GENDER.getMergeTtime()) + " ms ( ~approx "
@@ -92,6 +101,9 @@ buildOutputDirectory();
 		MergeData P2T2DEPT = new MergeData(T22, new ArrayList<String>());
 		P2T2DEPT.performMergeSort(Constants.T2_DEPT, 0, 3);
 		t2_department_file = P2T2DEPT.getOutputPath();
+		System.out.println("Read Count " + P2T2DEPT.getReadCount());
+		System.out.println("Write Count "  + (P2T2DEPT.getWriteCount() - P2T2DEPT.getWrite()));
+		System.out.println("Unique Data "  + P2T2DEPT.getWrite());
 		System.out.println("Time Taken to merge data  " + (P2T2DEPT.getMergeTtime()) + " ms ( ~approx "
 				+ ((P2T2DEPT.getMergeTtime()) / 1000) + " sec)");
 		System.out.println("Total Time   " + (P1T2DEPT.getSortingTime() + P2T2DEPT.getMergeTtime()) + " ms ( ~approx "
@@ -104,6 +116,9 @@ buildOutputDirectory();
 		MergeData P2T1EMP = new MergeData(T13, new ArrayList<String>());
 		P2T1EMP.performMergeSort(Constants.T1_EMP, 0, 8);
 		t1_employee_file = P2T1EMP.getOutputPath();
+		System.out.println("Read Count " + P2T1EMP.getReadCount());
+		System.out.println("Write Count "  + (P2T1EMP.getWriteCount() - P2T1EMP.getWrite()));
+		System.out.println("Unique Data "  + P2T1EMP.getWrite());
 		System.out.println("Time Taken to merge data  " + (P2T1EMP.getMergeTtime()) + " ms ( ~approx "
 				+ ((P2T1EMP.getMergeTtime()) / 1000) + " sec)");
 		System.out.println("Total Time   " + (P1T1EMP.getSortingTime() + P2T1EMP.getMergeTtime()) + " ms ( ~approx "
@@ -116,6 +131,9 @@ buildOutputDirectory();
 		MergeData P2T2EMP = new MergeData(T23, new ArrayList<String>());
 		P2T2EMP.performMergeSort(Constants.T2_EMP, 0, 8);
 		t2_employee_file = P2T2EMP.getOutputPath();
+		System.out.println("Read Count " + P2T2EMP.getReadCount());
+		System.out.println("Write Count "  + (P2T2EMP.getWriteCount() - P2T2EMP.getWrite()));
+		System.out.println("Unique Data "  + P2T2EMP.getWrite());
 		System.out.println("Time Taken to merge data  " + (P2T2EMP.getMergeTtime()) + " ms ( ~approx "
 				+ ((P2T2EMP.getMergeTtime()) / 1000) + " sec)");
 		System.out.println("Total Time   " + (P1T2EMP.getSortingTime() + P2T2EMP.getMergeTtime()) + " ms ( ~approx "
@@ -142,7 +160,7 @@ buildOutputDirectory();
 		compressedBitmap.generateBitmap(t2_gender_file, "T2_GENDER", 1);
 		System.out
 		.println("****************************List of Unique Data*********************************************");
-
+		System.out.println("Read Count " + (P2T1EMP.getWrite() + P2T2EMP.getWrite()));
 		mergeSort(t1_employee_file, t2_employee_file, T1List, T2List);
 		/*
 		 * List<String> listT1T2 = new ArrayList<String>();
@@ -162,6 +180,7 @@ buildOutputDirectory();
 
 	public static void mergeSort(String file1, String file2, List<String> T1List, List<String> T2List) {
 		long itertionStart = System.currentTimeMillis();
+		long write = 0;
 		try {
 			BufferedReader br1 = new BufferedReader(new FileReader(file1));
 			BufferedReader br2 = new BufferedReader(new FileReader(file2));
@@ -251,6 +270,7 @@ buildOutputDirectory();
 						}
 						// System.out.println(subList.size());
 						subList = quickSort.executeQuickSort(subList, 0, 18);
+						write++;
 						bw.write(subList.get(subList.size() - 1));
 						bw.newLine();
 						tuple2 = null;
@@ -273,6 +293,7 @@ buildOutputDirectory();
 							count = 0;
 						}
 						subList = quickSort.executeQuickSort(subList, 0, 18);
+						write++;
 						bw.write(subList.get(subList.size() - 1));
 						bw.newLine();
 						tuple1 = null;
@@ -298,6 +319,7 @@ buildOutputDirectory();
 							count = 0;
 						}
 						subList = quickSort.executeQuickSort(subList, 0, 18);
+						write++;
 						bw.write(subList.get(subList.size() - 1));
 						bw.newLine();
 						tuple1 = null;
@@ -322,6 +344,7 @@ buildOutputDirectory();
 							count1 = 0;
 						}
 						subList = quickSort.executeQuickSort(subList, 0, 18);
+						write++;
 						bw.write(subList.get(subList.size() - 1));
 						bw.newLine();
 						tuple2 = null;
@@ -334,6 +357,7 @@ buildOutputDirectory();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println("Write Count " + write);
 		System.out.println(" Final Time to return output : " + (System.currentTimeMillis() - itertionStart) + "ms" + "("
 				+ "~approx " + (System.currentTimeMillis() - itertionStart) / 1000.0 + " sec)");
 	}

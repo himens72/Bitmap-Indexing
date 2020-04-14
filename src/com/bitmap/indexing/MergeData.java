@@ -25,25 +25,6 @@ import java.util.List;
 
 public class MergeData {
 	long mergeTtime = 0;
-	int readCount = 0;
-
-	public int getReadCount() {
-		return readCount;
-	}
-
-	public void setReadCount(int readCount) {
-		this.readCount = readCount;
-	}
-
-	public int getWriteCount() {
-		return WriteCount;
-	}
-
-	public void setWriteCount(int writeCount) {
-		WriteCount = writeCount;
-	}
-
-	int WriteCount = 0;
 
 	public long getMergeTtime() {
 		return mergeTtime;
@@ -53,25 +34,23 @@ public class MergeData {
 		this.mergeTtime = mergeTtime;
 	}
 
-	int tupleCount1 = 1;
-
-	public int getTupleCount1() {
-		return tupleCount1;
+	long readCount = 0;
+	public long getReadCount() {
+		return readCount;
 	}
 
-	public void setTupleCount1(int tupleCount1) {
-		this.tupleCount1 = tupleCount1;
+	public void setReadCount(long readCount) {
+		this.readCount = readCount;
 	}
 
-	public int getTupleCount2() {
-		return tupleCount2;
+	long writeCount = 0;
+	public long getWriteCount() {
+		return writeCount;
 	}
 
-	public void setTupleCount2(int tupleCount2) {
-		this.tupleCount2 = tupleCount2;
+	public void setWriteCount(long writeCount) {
+		this.writeCount = writeCount;
 	}
-
-	int tupleCount2 = 1;
 
 	static int itertion = 0;
 	static String currentMergeFile = "";
@@ -91,9 +70,13 @@ public class MergeData {
 		listOfFiles = new ArrayList<>();
 		listOfFiles.addAll(T1);
 		listOfFiles.addAll(T2);
+		writeCount = 0;
+		readCount = 0;
 	}
+	
 
 	public void mergeSort(List<String> blockList, String directory, int startIndex, int endIndex) {
+		write = 0;
 		long itertionStart = System.currentTimeMillis();
 		ArrayList<String> mergedFiles = new ArrayList<>();
 		System.lineSeparator();
@@ -102,7 +85,7 @@ public class MergeData {
 			try {
 				BufferedReader br1 = new BufferedReader(new FileReader(blockList.get(i)));
 				BufferedReader br2 = null;
-				if (i + 1 < blockList.size())
+				if (i + 1 < blockList.size()) 
 					br2 = new BufferedReader(new FileReader(blockList.get(i + 1)));
 
 				BufferedWriter bw = new BufferedWriter(new FileWriter(currentMergeFile));
@@ -110,29 +93,20 @@ public class MergeData {
 				String tuple2 = null;
 				long length1 = 0;
 				long length2 = 0;
-				String currentTuple = "";
 				if (br2 != null) {
 					while (true) {
 						if (tuple1 == null) {
 							tuple1 = br1.readLine();
-							tupleCount1++;
+							readCount++;
 							length1 = tuple1 == null || tuple1.trim().length() == 0 ? length1
 									: tuple1.substring(endIndex + 1).trim().length();
-							if (tupleCount1 == 40) {
-								++readCount;
-								tupleCount1 = 0;
-							}
 						}
 						if (tuple2 == null) {
 							tuple2 = br2.readLine();
+							readCount++;
 							// System.out.println("Here " + tuple2);
 							length2 = tuple2 == null || tuple2.trim().length() == 0 ? length2
 									: tuple2.substring(endIndex + 1).trim().length();
-							tupleCount2++;
-							if (tupleCount2 == 40) {
-								++readCount;
-								tupleCount2 = 0;
-							}
 						}
 						if (tuple1 == null && tuple2 == null) {
 							break;
@@ -141,6 +115,7 @@ public class MergeData {
 							String id1 = tuple1.substring(0, endIndex);
 							String id2 = tuple2.substring(0, endIndex);
 							if (id1.equals(id2)) {
+								write++;
 								bw.write(id1 + ":" + tuple1.substring(endIndex + 1) + tuple2.substring(endIndex + 1));
 								bw.newLine();
 								tuple1 = null;
@@ -150,6 +125,7 @@ public class MergeData {
 								for (int k = 0; k < length1; k++) {
 									temp.append(0);
 								}
+								write++;
 								bw.write(tuple2.substring(0, endIndex + 1) + temp.toString()
 								+ tuple2.substring(endIndex + 1));
 								bw.newLine();
@@ -159,6 +135,7 @@ public class MergeData {
 								for (int k = 0; k < length2; k++) {
 									temp.append(0);
 								}
+								write++;
 								bw.write(tuple1 + temp.toString());
 								bw.newLine();
 								tuple1 = null;
@@ -169,6 +146,7 @@ public class MergeData {
 								for (int k = 0; k < length2; k++) {
 									temp.append(0);
 								}
+								write++;
 								// System.out.println("Length 2 " + length2);
 								bw.write(tuple1 + temp.toString());
 								bw.newLine();
@@ -178,6 +156,7 @@ public class MergeData {
 								for (int k = 0; k < length1; k++) {
 									temp.append(0);
 								}
+								write++;
 								bw.write(tuple2.substring(0, endIndex + 1) + temp.toString()
 								+ tuple2.substring(endIndex + 1));
 								bw.newLine();
@@ -188,11 +167,12 @@ public class MergeData {
 					}
 				} else {
 					while ((tuple1 = br1.readLine()) != null) {
+						write++;
+						readCount++;
 						bw.write(tuple1);
 						bw.newLine();
 					}
 				}
-				bw.write(currentTuple);
 				bw.close();
 				mergedFiles.add(currentMergeFile);
 				br1.close();
@@ -200,6 +180,7 @@ public class MergeData {
 				e.printStackTrace();
 			}
 		}
+		writeCount += write;
 		mergeTtime += (System.currentTimeMillis() - itertionStart);
 		/*
 		 * System.out.println("Round " + itertion + " Merging Time : " +
