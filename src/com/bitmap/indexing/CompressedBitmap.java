@@ -1,4 +1,17 @@
 package com.bitmap.indexing;
+/*
+ * https://www.geeksforgeeks.org/java-program-for-quicksort/
+ * https://oracle-base.com/articles/9i/bitmap-join-indexes
+ * https://logicalread.com/2013/06/03/oracle-11g-bitmap-join-indexes-mc02/
+ * https://www.youtube.com/watch?v=sMbQW7XNUZs
+ * http://www.dba-oracle.com/art_builder_bitmap_join_idx.htm
+ * https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7030998/
+ * https://www.geeksforgeeks.org/bitmap-indexing-in-dbms/
+ * https://www.geeksforgeeks.org/indexing-in-databases-set-1/
+ * https://en.wikipedia.org/wiki/Bitmap_index
+ * https://roaringbitmap.org/about/
+ * https://sdm.lbl.gov/~kewu/ps/LBNL-49627.pdf
+ */
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -42,8 +55,8 @@ public class CompressedBitmap {
 				builder = new StringBuilder();
 			}
 			long end = (System.currentTimeMillis() - begin);
-			System.out.println("Time Taken to Create Compressed Bitmap of " + name + " : "
-					+ end + " ms (approx " + (end / 1000) +"sec )" );
+			System.out.println("Time Taken to Create Compressed Bitmap of " + name + " : " + end + " ms (approx "
+					+ (end / 1000) + "sec )");
 			write.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

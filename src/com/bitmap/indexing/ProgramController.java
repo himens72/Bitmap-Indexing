@@ -1,3 +1,16 @@
+/*
+ * https://oracle-base.com/articles/9i/bitmap-join-indexes
+ * https://logicalread.com/2013/06/03/oracle-11g-bitmap-join-indexes-mc02/
+ * https://www.youtube.com/watch?v=sMbQW7XNUZs
+ * http://www.dba-oracle.com/art_builder_bitmap_join_idx.htm
+ * https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7030998/
+ * https://www.geeksforgeeks.org/bitmap-indexing-in-dbms/
+ * https://www.geeksforgeeks.org/indexing-in-databases-set-1/
+ * https://en.wikipedia.org/wiki/Bitmap_index
+ * https://roaringbitmap.org/about/
+ * https://sdm.lbl.gov/~kewu/ps/LBNL-49627.pdf
+ */
+
 package com.bitmap.indexing;
 
 import java.io.BufferedReader;
@@ -10,7 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import sun.security.util.math.intpoly.P384OrderField;
 
 public class ProgramController {
 	static String fileName1 = Constants.INPUT_PATH + Constants.INPUT_FILE1;
