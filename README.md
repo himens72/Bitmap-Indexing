@@ -1,4 +1,4 @@
-# Bitmap-Indexing
+## PLEASE note the changes below in the record structure:
 ```
 Total Points: 10
 
